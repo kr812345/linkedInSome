@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 17, "column": 0}, "map": {"version":3,"sources":["file:///home/krishna/Documents/Code/shipIt/linkedIn/app/page.tsx"],"sourcesContent":["const React = require('react');\n\nconst page = () => {\n  return (\n    <div>page</div>\n  )\n}\n\nmodule.exports = page;"],"names":[],"mappings":";AAAA,MAAM;AAEN,MAAM,OAAO;IACX,qBACE,QAAC;kBAAI;;;;;;AAET;AAEA,OAAO,OAAO,GAAG"}}]
+}
