@@ -13,7 +13,7 @@ const upload = multer({ storage });
 
 const uploadRouter = express.Router();
 
-uploadRouter.post('/upload', upload.single('file'), c.uploadImage);
-uploadRouter.post('/llm-tell-me', c.geminiTellMe);
+uploadRouter.post('/roast', upload.single('file'), c.uploadImage);
+uploadRouter.post('/llm-tell-me', c.aiTellMe);
 
 export default uploadRouter;

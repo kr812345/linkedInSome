@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +23,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -28,7 +34,13 @@
     "**/*.tsx",
     "client/.next/types/**/*.ts",
     "dev/types/**/*.ts",
-    "**/*.mts"
-, "app/helper/notify.tsx", "src/service/service.gemini.js"  ],
-  "exclude": ["node_modules"]
+    "**/*.mts",
+    "app/helper/notify.tsx",
+    "backend/src/service/service.gemini.js",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

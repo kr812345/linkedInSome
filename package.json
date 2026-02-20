@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "next:dev": "next dev",
-    "server": "nodemon server/server.js --env-file .env",
+    "server": "nodemon backend/server.js --env-file .env",
     "dev": "concurrently \"pnpm:next:dev\" \"pnpm:server\"",
     "build": "next build",
     "start": "next start",
