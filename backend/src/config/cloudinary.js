@@ -7,9 +7,9 @@ import { v2 as cloudinary } from 'cloudinary';
 // });
 
 cloudinary.config({
-    cloud_name: "damljwkim",
-    api_key: "398827719559747",
-    api_secret: "wVJqbafMyIXi03BsFZi-qLZllOY",  
+    cloud_name: "",
+    api_key: "",
+    api_secret: "",  
 });
 
 export default cloudinary;
