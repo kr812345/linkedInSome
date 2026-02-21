@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.json()); // for json to parse in the request else body which is in json will not be parsed.
 app.use(express.urlencoded({extended: true})); // for formdata.
-app.use(cors({ origin: ['http://localhost:3000'] }))
+app.use(cors({ origin: ['http://localhost:3000', 'https://linkroast.vercel.app'] }))
 
 
 // connectDB();
@@ -26,6 +26,6 @@ app.get('/health', (req, res) => {
   res.send('Server is running');
 });
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`\n\n ''' \n\n Server is running at: http://localhost:${port} \n\n ''' \n\n`);
 });
