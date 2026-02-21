@@ -13,15 +13,15 @@ import { Toaster } from 'sonner';
 const page = () => {
 
   return (
-    <main className="w-screen h-full min-h-screen bg-[#050505]">
-      <Toaster className="bg-[#ff2f00a1] text-white border border-[#ff2f00]"/>
-      <Hero/>
-      <Section2/>
-      <Section3/>
-      <Section4/>
-      <Section5/>
-      <FAQs/>
-      <Footer/>
+    <main className="w-full overflow-x-hidden h-full min-h-screen bg-[#050505]">
+      <Toaster className="bg-[#ff2f00a1] text-white border border-[#ff2f00]" />
+      <Hero />
+      <Section2 />
+      <Section3 />
+      <Section4 />
+      <Section5 />
+      <FAQs />
+      <Footer />
     </main>
   )
 }

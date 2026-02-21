@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///home/krishna/Documents/Code/shipIt/linkedIn/app/page.tsx"],"sourcesContent":["'use client'\nimport React from 'react';\nimport Link from 'next/link';\n\nconst page = () => {\n  return (\n    <div className=\"w-100 h-100 bg-gray-800\">\n      <Link href={'/roster'}>\n       roster\n      </Link>\n    </div>\n  )\n}\n\nexport default page;  "],"names":[],"mappings":";;;;;AAEA;AAFA;;;AAIA,MAAM,OAAO;IACX,qBACE,gZAAC;QAAI,WAAU;kBACb,cAAA,gZAAC,yUAAI;YAAC,MAAM;sBAAW;;;;;;;;;;;AAK7B;uCAEe"}}]
-}

@@ -14,6 +14,7 @@ const upload = multer({ storage });
 const uploadRouter = express.Router();
 
 uploadRouter.post('/roast', upload.single('file'), c.uploadImage);
-uploadRouter.post('/llm-tell-me', c.aiTellMe);
+// uploadRouter.post('/llm-tell-me', c.aiTellMe);
+uploadRouter.post('/waitinglist', c.waitingList);
 
 export default uploadRouter;

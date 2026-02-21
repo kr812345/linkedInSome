@@ -10,19 +10,22 @@ const port = process.env.PORT || 5000;
 
 const app = express();
 
+app.use(express.json()); // for json to parse in the request else body which is in json will not be parsed.
+app.use(express.urlencoded({extended: true})); // for formdata.
 app.use(cors({ origin: ['http://localhost:3000'] }))
+
 
 // connectDB();
 // console.log("GEMINI KEY:", process.env.GEMINI_API_KEY); 
-// console.log(process.cwd());
+// console.log(process.env);
 // console.log("MONGO URI:", process.env.MONGO_URI);  
 
-app.use('/api/v1/', uploadRouter);
+app.use('/api/v1', uploadRouter);
 
 app.get('/health', (req, res) => {
   res.send('Server is running');
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at: http://localhost:${port}`);
+  console.log(`\n\n ''' \n\n Server is running at: http://localhost:${port} \n\n ''' \n\n`);
 });

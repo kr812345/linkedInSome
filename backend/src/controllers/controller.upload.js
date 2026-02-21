@@ -2,6 +2,7 @@ import { ClockFading } from 'lucide-react';
 // import { askLLM } from '../service/service.gemini.js';
 import uploadToCloud,{ deleteFromCloudinary } from '../service/service.cloudinary.js';
 import feedToLLM from '../helper/chooseLLM.js';
+import startAutomation from '../service/service.email.js';
 
 export const uploadImage = async (req, res) => {
     try {
@@ -42,20 +43,36 @@ export const uploadImage = async (req, res) => {
     }
 }
 
-export const aiTellMe = async (req, res) => {
+// export const aiTellMe = async (req, res) => {
+//     try {
+//         const file = req.file;
+        
+//         if (!file) return res.status(404).json({message: "No Image"});
+        
+//         const llm = {gemini: 1}
+//         const inputImage = file.path;   
+
+//         const llmOutput = await feedToLLM(llm, inputImage);
+
+//         return res.status(200).json({success: true, message: "Image uploaded successfully", data: llmOutput});
+//     } catch (err) {
+//         console.log("error: ", err);
+//         res.status(500).json({success: false, message: "error in aiTellMe"});
+//     }
+// }
+
+export const waitingList = async (req, res) => {
     try {
-        const file = req.file;
-        
-        if (!file) return res.status(404).json({message: "No Image"});
-        
-        const llm = {gemini: 1}
-        const inputImage = file.path;   
+        const email = req.body.email;
 
-        const llmOutput = await feedToLLM(llm, inputImage);
+        const makeResponse = await startAutomation(email);
+        
+        if (makeResponse === "rejected") {
+            return res.status(400).json({success: false, message: makeResponse});
+        }
 
-        return res.status(200).json({success: true, message: "Image uploaded successfully", data: llmOutput});
+        return res.status(200).json({ success: true, message: "Response has been saved.", data: makeResponse });
     } catch (err) {
-        console.log("error: ", err);
-        res.status(500).json({success: false, message: "error in aiTellMe"});
+        console.error(`Error in controller: ${err}`);
     }
 }
