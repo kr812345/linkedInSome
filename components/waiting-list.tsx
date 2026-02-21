@@ -17,7 +17,7 @@ const WaitingList = () => {
         if (email.length > 3) {
             setIsLoading(true);
             e.preventDefault()
-            await axios.post('http://localhost:5000/api/v1/waitinglist', {email})
+            await axios.post('https://linkroast.vercel.app/api/v1/waitinglist', {email})
             .then(res => {
                 setResponse(res.data)
                 setIsLoading(false);
