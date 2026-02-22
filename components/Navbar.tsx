@@ -18,7 +18,7 @@ const Navbar = () => {
                 L
               </div>
               <span className="text-lg sm:text-xl font-bold text-text-primary">
-                LinkedIn
+                LinkRoast
               </span>
             </Link>
           </div>
@@ -59,11 +59,11 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 mt-2 mx-4 bg-bg-background/95 backdrop-blur-md border border-bg-border rounded-2xl shadow-lg py-4 px-6 flex flex-col gap-3">
           <Link
-            href="/product"
+            href="/"
             className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors py-2"
             onClick={() => setMobileOpen(false)}
           >
-            Product
+            waiting list
           </Link>
           {/* <Link
             href="/about"

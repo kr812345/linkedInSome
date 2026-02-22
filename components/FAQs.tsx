@@ -33,7 +33,7 @@ const FAQs = () => {
           <span className='absolute h-10 -translate-y-16 w-full max-w-md blur-2xl bg-[#ff2f00]'></span>
           <span className='absolute h-10 -translate-y-16 w-full max-w-md blur-2xl bg-[#ff2f00]'></span>
           <h1 className='relative rounded-full text-sm sm:text-lg tracking-wide font-semibold text-center px-4'>Before recruiters reject you, let our AI do it first.</h1>
-          <button onClick={() => redirect('/waiting-list')} className='text-xl sm:text-2xl font-medium px-3 py-3 hover:shadow-[0_0_10px_1px_#ff2f00] bg-[#ff2f00] w-fit rounded-2xl'>Join Waiting List</button>
+          <button onClick={() => redirect('/')} className='text-xl sm:text-2xl font-medium px-3 py-3 hover:shadow-[0_0_10px_1px_#ff2f00] bg-[#ff2f00] w-fit rounded-2xl'>Join Waiting List</button>
         </div>
       </div>
     </>
