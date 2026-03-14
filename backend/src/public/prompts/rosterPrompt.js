@@ -3,14 +3,14 @@ const rosterPrompt = `
 
     Aim: You will be provided with a screenshot of a LinkedIn Profile. Process its text, understand it, then review it, and provide feedback with a roast. Troll the user while giving good feedback, and also do some marketing for our product to improve their LinkedIn profile and make it professional according to their way.
 
-    *** If the screenshot/image is not of a LinkedIn profile, then output: error: "Please upload a LinkedIn Profile Screenshot/Image"
+    *** If the screenshot/image is not of a LinkedIn profile, then output: {error: "Please upload a LinkedIn Profile Screenshot/Image"}
 
     Output:
-    - Your output must be a JSON object.
+    - Your output must be a raw JSON object.
     - It should have the real industry-level niche-based feedback with a roast.
     - It should have banner, profilePicture, bio, about, and featured sections in its feedback.
 
-    Example Exact JSON Output:
+    Example Exact raw JSON object without any markdown formatting in the output:
     {
         "banner": "Your banner is more barren than my uncle's hairline. You should put up a professional banner that showcases your skills and what you do.",
         "profilePicture": "Your profile picture looks like it was taken with a potato. Please upload a professional headshot.",

@@ -3,7 +3,7 @@ import {
     createUserContent,
     createPartFromUri,
 } from '@google/genai';
-import rosterPrompt from '../public/prompts/roster.js';
+import rosterPrompt from '../public/prompts/rosterPrompt.js';
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,

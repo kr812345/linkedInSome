@@ -8,7 +8,6 @@ export const uploadImage = async (req, res) => {
     try {
         const file = req.file;
         // const llm = req.body;
-
         if (!file) return res.status(404).json({message: "No File"});
         
         // const respo = await uploadToCloud(`./${file.path}`);
@@ -22,8 +21,11 @@ export const uploadImage = async (req, res) => {
 
         const llmOutput = await feedToLLM({llm, inputImage: file.path});
 
-        if (llmOutput.error) {
-            return res.status(400).json({success: false, message: llmOutput.error});
+        console.log(llmOutput);
+        const cleanLLMOutput = llmOutput.replace('```json','').replace('```','');
+
+        if (cleanLLMOutput.error) {
+            return res.status(400).json({success: false, message: "Not a LinkedIn Image/Screenshot", error: cleanLLMOutput.error});
         }
 
         // const respoAfterDelete = await deleteFromCloudinary(respo.public_id);
@@ -32,11 +34,16 @@ export const uploadImage = async (req, res) => {
         //     return res.status(400).json({success: false, message: "Image deletion Failed"});
         // }
 
-        if (typeof llmOutput !== "object" && typeof llmOutput !== "string") {
+        if (typeof cleanLLMOutput !== "object" && typeof cleanLLMOutput !== "string") {
             return res.status(400).json({success: false, message: "Invalid LLM Output"});
         }
+        if (typeof cleanLLMOutput === 'string') {
+            const finalOutput = JSON.parse(cleanLLMOutput);   
+            return res.status(200).json({success: true, message: "Roast Feedback Success", data: finalOutput});
+        }
 
-        return res.status(200).json({success: true, message: "Roast Feedback Success", data: llmOutput});
+        return res.status(200).json({success: true, message: "Roast Feedback Success", data: cleanLLMOutput});
+
     } catch (err) {
         console.error(err);
         res.status(500).json({success: false, message: "error in processing request"});

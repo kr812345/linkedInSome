@@ -11,7 +11,8 @@ const Hero = () => {
   //   toast("Welcome to EasyLink!")
   // }, [])
 
-  const handleGetRoasted = () => {
+  const handleGetRoasted = (e: React.FormEvent) => {
+    e.preventDefault()
     redirect('/roster')
   }
 
@@ -36,8 +37,9 @@ const Hero = () => {
               <h1 className='text-4xl sm:text-5xl lg:text-7xl font-bold text-white font-serif'>Your LinkedIn Profile, Roasted & Refined.</h1>
               <p className='text-gray-400 pt-4 text-sm sm:text-base'>The AI-powered profile reviewer that uses Gemini to give you honest feedback—and just enough heat—to fix what's weak, highlight what works, and help you stand out where it matters.</p>
               <div className='flex gap-4 mt-8 sm:mt-10 flex flex-col items-start sm:flex-row'>
-                <WaitingList/>
-                {/* <button onClick={() => handleGetRoasted()} className='border border-orange-600 tracking-tight rounded-full font-medium px-3 py-2 text-sm sm:text-base'>See Example</button> */}
+                {/* <WaitingList/> */}
+                 <button onClick={(e) => handleGetRoasted(e)} className='border border-[#ff2f00ff] tracking-tight hover:shadow-[0_0_2px_2px_#ff2f00] bg-orange-700 font-medium rounded-full px-4 py-3 flex text-sm sm:text-base'>Get Roasted<Play className='size-4 sm:size-5 ml-1' /></button>
+                {/* <button onClick={(e) => handleGetRoasted(e)} className='border border-orange-600 tracking-tight rounded-full font-medium px-3 py-2 text-sm sm:text-base'>See Example</button> */}
               </div>
             </div>
 
