@@ -21,10 +21,10 @@ const RosterOutput = ({data, error}: dataProps) => {
   }
 
   return (<>
-    {data && <div className="not-md:col-span-2 h-full w-full overflow-y-auto px-4 sm:pl-8 mt-6 md:mt-0">
+    {data && <div className="not-md:col-span-2 h-full w-full overflow-y-auto scrollbar-hide px-4 sm:pl-8 mt-6 md:mt-0">
       <div className="relative h-180 sm:p-6 rounded-lg shadow-md bg-bg-surface">
           
-        <div className="relative space-y-4 overflow-y-auto h-full sm:space-y-6">
+        <div className="relative space-y-4  scrollbar-hide h-full sm:space-y-6">
           {/* Banner Review */}
           {Object.entries(data).map(([key, value]) => (
             <div onClick={handleToast} key={key} className="prose border border-[#ff2f0055] rounded-lg p-4 sm:p-4 border-bg-elevated">
@@ -38,12 +38,6 @@ const RosterOutput = ({data, error}: dataProps) => {
           {/* </div>} */}
         </div>
         
-        {/* Improve Option */}
-        <div className="sticky bottom-0 left-0 right-0 bg-bg-surface p-4 border-t border-bg-elevated mt-4 sm:mt-6 rounded-b-lg flex justify-end">
-          <Link href="/improve" className="inline-block px-4 py-2 bg-primary text-text-primary rounded-md text-sm sm:text-base hover:shadow-[0_0_10px_2px_#ff2f00] transition-all">
-            Improve your Profile
-          </Link>
-        </div>
       </div>  
     </div>}
   </>)

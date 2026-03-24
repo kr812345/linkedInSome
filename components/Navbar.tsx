@@ -7,7 +7,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] sm:w-[80%] lg:w-[60%] z-50 bg-bg-background/80 backdrop-blur-md border border-bg-border rounded-full shadow-lg">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] sm:w-[80%] lg:w-[60%] z-50 bg-bg-background/80 backdrop-blur-md border border-[#ff2f00] rounded-full shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo Section */}

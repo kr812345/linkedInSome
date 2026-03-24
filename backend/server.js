@@ -1,8 +1,11 @@
 console.log("hello");
-import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });
+import 'dotenv/config';
+// dotenv.config({ path: './.env' });  
+import './src/config/envConfig.js';
 import express from 'express';
 import connectDB from './src/config/db.js';
+import './src/service/service.gemini.js';
+import './src/service/service.openai.js';
 import uploadRouter from './src/routes/route.upload.js';
 import cors from 'cors';
 

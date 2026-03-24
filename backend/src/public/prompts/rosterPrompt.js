@@ -18,8 +18,6 @@ const rosterPrompt = `
         "about": "Your about section is a snoozefest. Tell a story, showcase your accomplishments, and make it interesting to read.",
         "featured": "Your featured section is empty. It's a great place to showcase your work, so add some projects, articles, or links to your portfolio."
     }
-
-
 `
 
 export default rosterPrompt;

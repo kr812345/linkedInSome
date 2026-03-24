@@ -4,6 +4,7 @@ import { RiCloseLargeLine } from 'react-icons/ri';
 import Loader from '@/components/Loader';
 import { motion } from 'motion/react';
 import { toast } from 'sonner';
+import Link from 'next/link';
 import {llmResponse} from '@/types/llmResponse';
 import RosterOutput from '@/components/RosterOutput';
 
@@ -129,10 +130,10 @@ const RosterPage = () => {
         <p className="mb-6 text-text-secondary text-sm sm:text-base">Upload your LinkedIn Profile Screenshot to get the feedback.</p>
       </div>
 
-      <div className='relative not-md:flex-col flex m-auto h-fit items-center'>
+      <div className='relative not-md:flex-col flex m-auto min-h-100 items-center'>
 
         {/* Left Side */}
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col justify-center w-full">
           {image && (
             <div className="relative mb-4 flex w-full self-center flex-col items-center px-4">
               <div className='flex gap-2'>
@@ -156,7 +157,7 @@ const RosterPage = () => {
             onDrop={handleDrop}
             onDragOver={handleDragOver}
           >
-            <div>
+            <div className=''>
               <p className="mb-2 text-sm sm:text-base">Drag & drop an Image</p>
               <p className="my-2 text-sm">or</p>
               <label className="cursor-pointer px-4 py-2 rounded-md transition-all bg-primary text-text-primary text-sm sm:text-base">
@@ -175,6 +176,13 @@ const RosterPage = () => {
         {/* Right Side */}
           { isLoading ? <Loader/> : <RosterOutput data={data} error={error}/> }
       </div>
+
+      {/* Improve Option */}
+        {data && <div className=" bottom-0 left-0 right-0 bg-bg-surface p-4 border-t border-bg-elevated mt-4 sm:mt-8 rounded-b-lg flex justify-center">
+          <Link href="/userNiche" className="inline-block border-2 border-[#ff2f00] hover:rounded-md px-4 py-2 bg-primary text-text-primary rounded-full text-sm sm:text-base hover:shadow-[0_0_10px_2px_#ff2f00] transition-all">
+            Improve your Profile
+          </Link>
+        </div>}
     </div>
   );
 };
