@@ -8,7 +8,8 @@ const Section4 = () => {
         { i: "02", title: "LLM", desc: "AI Reads & Understand your profile" },
         { i: "03", title: "Roast", desc: "AI reads and give feedback on your profile" },
         { i: "04", title: "Improve", desc: "Use the feedback and improve your linkedIn profile" }
-    ];
+    ]; 
+    // remove this line and rewrite the comments, as you might not need 
 
     return (
         <>
