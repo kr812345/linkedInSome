@@ -23,7 +23,7 @@ app.use(cors({ origin: ['http://localhost:3000', 'https://linkroast.vercel.app']
 // console.log(process.env);
 // console.log("MONGO URI:", process.env.MONGO_URI);  
 
-app.use('/api/v1', uploadRouter);
+app.use('/v1/api', uploadRouter);
 
 app.get('/health', (req, res) => {
   res.send('Server is running');

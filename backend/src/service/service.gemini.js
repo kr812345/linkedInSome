@@ -10,22 +10,24 @@ const ai = new GoogleGenAI({
 });
 
 export default async function
-    askGemini(inputImage) {
+    askGemini(systemPrompt, inputImage = undefined) {
         try {
+            let image;
+            if (inputImage) {    
+                image = await ai.files.upload({
+                    file: `${inputImage}`,
+                })    
+            }
 
-            const image = await ai.files.upload({
-                file: `${inputImage}`,
-            })
-            
             const response = await ai.models.generateContent({
                 model: `${'gemini-2.5-flash'}`,
                 contents: createUserContent([
-                        `${rosterPrompt}`,
-                        createPartFromUri(image.uri, image.mimeType),
+                        `${systemPrompt}`,
+                        `${inputImage ? createPartFromUri(image.uri, image.mimeType) : undefined}`
                     ])
                 })
             
-            console.log("console from gemini service, next is the output from llm.", response.text);
+            console.log("\n\n\n\n gemini response: ", response.text, '\n\n\n\n');
             return response.text;
             } catch (error) {
                 console.log("Error in Gemini Service: ", error);

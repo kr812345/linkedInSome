@@ -3,23 +3,20 @@ import { ClockFading } from 'lucide-react';
 import uploadToCloud,{ deleteFromCloudinary } from '../service/service.cloudinary.js';
 import feedToLLM from '../helper/chooseLLM.js';
 import startAutomation from '../service/service.email.js';
+import { extractTextFromPDF } from '../helper/extractTextFromPDF.js';
+import rosterPrompt from '../public/prompts/rosterPrompt.js';
+import improveProfilePrompt from '../public/prompts/improveProfilePrompt.js';
+import { profileSchema } from '../public/schemas/profileSchema.js';
 
 export const uploadImage = async (req, res) => {
     try {
         const file = req.file;
-        // const llm = req.body;
+
         if (!file) return res.status(404).json({message: "No File"});
-        
-        // const respo = await uploadToCloud(`./${file.path}`);
-        
-        // if (!respo) {
-        //     return res.status(400).json({success: false, message: "Image uploading Failed"});
-        // }
 
         const llm = {gemini: true, openai: 0}
-        // const inputImage = respo.secure_url;
 
-        const llmOutput = await feedToLLM({llm, inputImage: file.path});
+        const llmOutput = await feedToLLM({rosterPrompt, llm, inputImage: file.path});
 
         console.log(llmOutput);
         const cleanLLMOutput = llmOutput.replace('```json','').replace('```','');
@@ -27,12 +24,6 @@ export const uploadImage = async (req, res) => {
         if (cleanLLMOutput.error) {
             return res.status(400).json({success: false, message: "Not a LinkedIn Image/Screenshot", error: cleanLLMOutput.error});
         }
-
-        // const respoAfterDelete = await deleteFromCloudinary(respo.public_id);
-
-        // if (!respoAfterDelete) {
-        //     return res.status(400).json({success: false, message: "Image deletion Failed"});
-        // }
 
         if (typeof cleanLLMOutput !== "object" && typeof cleanLLMOutput !== "string") {
             return res.status(400).json({success: false, message: "Invalid LLM Output"});
@@ -67,6 +58,31 @@ export const uploadImage = async (req, res) => {
 //         res.status(500).json({success: false, message: "error in aiTellMe"});
 //     }
 // }
+
+
+export const improve = async (req, res) => {
+    try {
+
+        const [file, data] = [req.file, req.body];
+        
+        if (!file) throw new Error('File not Found.');
+        console.log({file, data});
+        
+        const text = extractTextFromPDF(pdf=file.path);
+        if (!text) throw new Error('Failed to extract Text.');
+        
+        const llmResponse = feedToLLM({improveProfilePrompt, llm});
+        
+        const jsonLLmResponse = JSON.parse(llmResponse);
+        const final_llmResponse = profileSchema.parse(jsonLLmResponse);
+        
+        return res.status(200).json({ success: true, message: 'got the ai response successfully', data: `${final_llmResponse}`})
+    } catch (error) {
+        throw new Error(`improve Error: ${error}`);
+    }
+
+}
+
 
 export const waitingList = async (req, res) => {
     try {

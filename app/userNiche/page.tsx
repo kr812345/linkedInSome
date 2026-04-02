@@ -2,6 +2,7 @@
 import react from 'react';
 import Section from '@/components/Section';
 
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const userNichePage = () => {
     const [Image, setImage] = react.useState<string | null>(null);
@@ -11,24 +12,17 @@ const userNichePage = () => {
                         // {h:"You want to call yourself ?", sh:"Eg: Software Engineer, devops Engineer, Assitant Prof.", labelName:"callYourself", type: 'text'}, 
                         {h:"Resume (Optional)", sh:"To know your skillset.", labelName:"resume", type: 'file', accept: 'application/pdf'}];
     
-    const handleFormData = (formData: FormData) => {
-        let data:Object = {};
-        data['goal'] = formData.get('goal');
-        // data['callYourself'] = formData.get('callYourself');
-        data['resume'] = formData.get('resume');
-        alert(`${data['resume']}`)
-        console.log(data);
+    const handleFormData = async (formData: FormData) => {
         
-        const response =  await fetch(`${SERVER_URL}`,{
+        const response =  await fetch(`http://localhost:5000/v1/api/improve`,{
             method: 'POST',
-            // headers: {'Content-Type': 'application/json'},
-            body: data
+            body: formData
         })
 
-        if (!response.ok) { throw new Error("Please Try again, There is some Issue")}
+        if (!response) { throw new Error("Please Try again, There is some Issue")};
 
-        const resData = response.json();
-        console.log('This is the json response, we get: ',resData);
+        const resData = await response.json();
+        console.log('This is the json response, we get: ', resData);
     }
 
     const handleFilled = () => {
