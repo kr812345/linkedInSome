@@ -10,7 +10,7 @@ const fileFilter = (req, next, cb) => {
         return cb(new Error('INVALID_FILE_TYPE'), false);
     }
 
-    cb(null, true);
+    return cb(null, true);
 }
 
 const storage = diskStorage({
@@ -20,12 +20,12 @@ const storage = diskStorage({
                                 },
                                 });
 
-const upload = multer({storage, fileFilter});
+const upload = multer({storage, });
 
 const uploadRouter = express.Router();
 
 uploadRouter.post('/roast', upload.single('file'), c.uploadImage);
-uploadRouter.post('/improve', upload.single('file'), c.improve);
+uploadRouter.post('/improve', upload.single('resume'), c.improve);
 // uploadRouter.post('/llm-tell-me', c.aiTellMe);
 uploadRouter.post('/waitinglist', c.waitingList);
 

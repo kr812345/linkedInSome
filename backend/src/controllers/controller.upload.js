@@ -15,8 +15,8 @@ export const uploadImage = async (req, res) => {
         if (!file) return res.status(404).json({message: "No File"});
 
         const llm = {gemini: true, openai: 0}
-
-        const llmOutput = await feedToLLM({rosterPrompt, llm, inputImage: file.path});
+        console.log('controller se: ', rosterPrompt);
+        const llmOutput = await feedToLLM({systemPrompt: rosterPrompt, llm, inputImage: file.path});
 
         console.log(llmOutput);
         const cleanLLMOutput = llmOutput.replace('```json','').replace('```','');
@@ -68,19 +68,21 @@ export const improve = async (req, res) => {
         if (!file) throw new Error('File not Found.');
         console.log({file, data});
         
-        const text = extractTextFromPDF(pdf=file.path);
+        const text = await extractTextFromPDF(file.path);
         if (!text) throw new Error('Failed to extract Text.');
         
-        const llmResponse = feedToLLM({improveProfilePrompt, llm});
+        const llm = {gemini: true, openai: 0} 
+        const llmResponse = await feedToLLM({systemPrompt:improveProfilePrompt, userData:{text, goal: data.goal}, llm});
+        console.log(llmResponse);
+
+        const cleanLLMResponse = llmResponse.replace('```json','').replace('```','');
+        const jsonLLMResponse = JSON.parse(cleanLLMResponse);
+        const final_llmResponse = profileSchema.parse(jsonLLMResponse);
         
-        const jsonLLmResponse = JSON.parse(llmResponse);
-        const final_llmResponse = profileSchema.parse(jsonLLmResponse);
-        
-        return res.status(200).json({ success: true, message: 'got the ai response successfully', data: `${final_llmResponse}`})
+        return res.status(200).json({ success: true, message: 'got the ai response successfully', data: `${JSON.stringify(final_llmResponse)}`})
     } catch (error) {
         throw new Error(`improve Error: ${error}`);
     }
-
 }
 
 

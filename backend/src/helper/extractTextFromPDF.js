@@ -1,4 +1,5 @@
 import { extractText, getDocumentProxy } from 'unpdf';
+import { readFile } from 'fs/promises';
 
 export const extractTextFromPDF = async (pdfPath) => {
 

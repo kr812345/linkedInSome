@@ -85,7 +85,7 @@ const RosterPage = () => {
       const filedata = new FormData();
       filedata.append("file", file);
       // Call the roster function with the image data
-      await fetch("http://localhost:5000/api/v1/roast", {
+      await fetch("http://localhost:5000/v1/api/roast", {
         method: "POST",
         body: filedata,
       })

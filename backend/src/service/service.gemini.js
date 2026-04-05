@@ -10,7 +10,7 @@ const ai = new GoogleGenAI({
 });
 
 export default async function
-    askGemini(systemPrompt, inputImage = undefined) {
+    askGemini(systemPrompt, userData, inputImage) {
         try {
             let image;
             if (inputImage) {    
@@ -18,12 +18,12 @@ export default async function
                     file: `${inputImage}`,
                 })    
             }
-
+            console.log(systemPrompt);
             const response = await ai.models.generateContent({
                 model: `${'gemini-2.5-flash'}`,
                 contents: createUserContent([
-                        `${systemPrompt}`,
-                        `${inputImage ? createPartFromUri(image.uri, image.mimeType) : undefined}`
+                        `${systemPrompt}, \n userData: ${JSON.stringify(userData)}`,
+                        inputImage ? createPartFromUri(image.uri, image.mimeType) : ''
                     ])
                 })
             

@@ -1,28 +1,52 @@
 'use client'
 import react from 'react';
 import Section from '@/components/Section';
+import { toast } from "sonner";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const userNichePage = () => {
     const [Image, setImage] = react.useState<string | null>(null);
     const [isFilled, setIsFilled] = react.useState<boolean|null>(false);
+    const [formData_, setFormData_] = react.useState<Map<string, string | File> | null>(new Map());
     
     const formLabels = [{h:"Goal", sh:"What do you want to do ?", labelName:"goal", type: 'text', accept: 'text'}, 
                         // {h:"You want to call yourself ?", sh:"Eg: Software Engineer, devops Engineer, Assitant Prof.", labelName:"callYourself", type: 'text'}, 
                         {h:"Resume (Optional)", sh:"To know your skillset.", labelName:"resume", type: 'file', accept: 'application/pdf'}];
     
-    const handleFormData = async (formData: FormData) => {
-        
-        const response =  await fetch(`http://localhost:5000/v1/api/improve`,{
-            method: 'POST',
-            body: formData
-        })
+    const handleFormData = async (name: string, event: react.ChangeEvent) => {
+        if (name === 'goal') {
+            setFormData_(prev => {
+                prev?.set('goal', event.target.value);
+                return prev;
+            });
+        }
+        if (name === 'resume') {
+            setFormData_(prev => {
+                prev?.set('resume', event.target.files[0]);
+                return prev;
+            });
+        }
+        console.log(formData_);   
+    }
 
-        if (!response) { throw new Error("Please Try again, There is some Issue")};
+    const handleFormSubmit = async (event: react.MouseEvent) => {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('resume', formData_.get('resume') as File);
+        formData.append('goal', formData_.get('goal') as string);
 
-        const resData = await response.json();
-        console.log('This is the json response, we get: ', resData);
+        if (formData_.get('goal')) {
+            const response =  await fetch(`http://localhost:5000/v1/api/improve`,{
+                method: 'POST',
+                body: formData,
+            })
+            
+            if (!response) { throw new Error("Please Try again, There is some Issue")};
+            
+            const resData = await response.json();
+            console.log('This is the form response, we get: ', resData);
+        } 
     }
 
     const handleFilled = () => {
@@ -39,12 +63,12 @@ const userNichePage = () => {
                             <h1 className='font-semibold text-md text-nowrap'>{item.h}</h1>
                             <h2 className='text-[12px] text-[#ffffffa7] font-thin'>{item.sh}</h2>
                             </div>
-                            <input className='text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1'  name={item.labelName} type={item.type} accept={item.accept} placeholder='Enter your details here..'/>
+                            <input className='text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1' id={item.labelName} name={item.labelName} type={item.type} accept={item.accept} onChange={(e)=>handleFormData(item.labelName,e)} placeholder='Enter your details here..'/>
                         </div>
                     ))
                 }
                     {isFilled && <p className='py-2 text-[12px] text-[#f00000] text-center'>Please fill the required inputs</p>}
-                    <button type='submit' className='py-2 bg-[#ff2f00] rounded-md w-full'>Submit</button>
+                    <button type='submit' onClick={e=>handleFormSubmit(e)} className='py-2 bg-[#ff2f00] rounded-md w-full'>Submit</button>
                 </form>
             </div>
         </Section>
