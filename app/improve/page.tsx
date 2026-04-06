@@ -3,12 +3,19 @@ import React from 'react';
 import Link from 'next/link';
 import { RiFileCopyLine } from 'react-icons/ri';
 import { toast } from 'sonner';
+import { useLLMResponseStore } from '../Store/store.llmResponse';
 
 export default function ImproveProfilePage() {
+  const { data } = useLLMResponseStore();
+  
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
     toast("Copied to clipboard!");
   };
+
+  React.useEffect(()=>{
+    console.log(data);
+  })
 
   return (
     <div className="min-h-screen bg-[#F3F2EF] text-[#000000] pb-20 pt-24">

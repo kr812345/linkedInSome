@@ -7,6 +7,8 @@ import { extractTextFromPDF } from '../helper/extractTextFromPDF.js';
 import rosterPrompt from '../public/prompts/rosterPrompt.js';
 import improveProfilePrompt from '../public/prompts/improveProfilePrompt.js';
 import { profileSchema } from '../public/schemas/profileSchema.js';
+import { cleanLLMResponse } from '../helper/cleanLLMResponse.js';
+import { handleRetries } from '../helper/handleRetriesLLM.js';
 
 export const uploadImage = async (req, res) => {
     try {
@@ -72,13 +74,12 @@ export const improve = async (req, res) => {
         if (!text) throw new Error('Failed to extract Text.');
         
         const llm = {gemini: true, openai: 0} 
-        const llmResponse = await feedToLLM({systemPrompt:improveProfilePrompt, userData:{text, goal: data.goal}, llm});
+        const llmResponse = await feedToLLM({systemPrompt: improveProfilePrompt, userData: {text, goal: data.goal}, llm});
         console.log(llmResponse);
 
-        const cleanLLMResponse = llmResponse.replace('```json','').replace('```','');
-        const jsonLLMResponse = JSON.parse(cleanLLMResponse);
-        const final_llmResponse = profileSchema.parse(jsonLLMResponse);
-        
+        const final_llmResponse = handleRetries(llmResponse,improveProfilePrompt,text, goal= data.goal,llm, retries=3, delay=1000);
+        // const final_llmResponse = cleanLLMResponse(llmResponse);
+
         return res.status(200).json({ success: true, message: 'got the ai response successfully', data: `${JSON.stringify(final_llmResponse)}`})
     } catch (error) {
         throw new Error(`improve Error: ${error}`);

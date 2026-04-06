@@ -5,5 +5,5 @@ export const profileSchema = z.object({
     profilePicture: z.string(),
     bio: z.string().max(220),
     about: z.string().max(2000),
-    featured: z.array(z.string()).length(3),
+    featured: z.array(z.object() | z.string()).length(3),
 });

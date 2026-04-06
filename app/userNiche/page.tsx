@@ -2,6 +2,9 @@
 import react from 'react';
 import Section from '@/components/Section';
 import { toast } from "sonner";
+import { redirect } from 'next/navigation';
+import { useLLMResponseStore } from '../Store/store.llmResponse';
+import Loader from '@/components/Loader';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -9,7 +12,9 @@ const userNichePage = () => {
     const [Image, setImage] = react.useState<string | null>(null);
     const [isFilled, setIsFilled] = react.useState<boolean|null>(false);
     const [formData_, setFormData_] = react.useState<Map<string, string | File> | null>(new Map());
-    
+    const { setData } = useLLMResponseStore();
+    const [isLoading, setIsLoading] = react.useState<boolean | null>(false);
+
     const formLabels = [{h:"Goal", sh:"What do you want to do ?", labelName:"goal", type: 'text', accept: 'text'}, 
                         // {h:"You want to call yourself ?", sh:"Eg: Software Engineer, devops Engineer, Assitant Prof.", labelName:"callYourself", type: 'text'}, 
                         {h:"Resume (Optional)", sh:"To know your skillset.", labelName:"resume", type: 'file', accept: 'application/pdf'}];
@@ -31,6 +36,7 @@ const userNichePage = () => {
     }
 
     const handleFormSubmit = async (event: react.MouseEvent) => {
+        setIsLoading(true);
         event.preventDefault();
         const formData = new FormData();
         formData.append('resume', formData_.get('resume') as File);
@@ -43,9 +49,15 @@ const userNichePage = () => {
             })
             
             if (!response) { throw new Error("Please Try again, There is some Issue")};
-            
+            setIsLoading(false);
             const resData = await response.json();
             console.log('This is the form response, we get: ', resData);
+            if (resData.success) {
+                setData({...resData.data.json()});
+                redirect(`/improve`);
+            } else {
+                toast('There is some issue, Please try again. \n or contact Admin if the issue persist.');
+            }
         } 
     }
 
@@ -55,22 +67,22 @@ const userNichePage = () => {
 
     return (<>
         <Section>
-            <div className='p-4 border border-[#ff2f00] rounded-lg flex flex-col gap-4 '>
-                <form action={handleFormData}>
-                    {formLabels.map((item,idx)=>(
-                        <div key={idx} className='md:flex md:space-y-2 pb-4 md:pb-1 space-y-1'>
-                            <div className='w-full'>
-                            <h1 className='font-semibold text-md text-nowrap'>{item.h}</h1>
-                            <h2 className='text-[12px] text-[#ffffffa7] font-thin'>{item.sh}</h2>
-                            </div>
-                            <input className='text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1' id={item.labelName} name={item.labelName} type={item.type} accept={item.accept} onChange={(e)=>handleFormData(item.labelName,e)} placeholder='Enter your details here..'/>
-                        </div>
-                    ))
-                }
-                    {isFilled && <p className='py-2 text-[12px] text-[#f00000] text-center'>Please fill the required inputs</p>}
-                    <button type='submit' onClick={e=>handleFormSubmit(e)} className='py-2 bg-[#ff2f00] rounded-md w-full'>Submit</button>
-                </form>
-            </div>
+            {!isLoading ? <div className='p-4 border border-[#ff2f00] rounded-lg flex flex-col gap-4 '>
+                            <form action={handleFormData}>
+                                {formLabels.map((item,idx)=>(
+                                    <div key={idx} className='md:flex md:space-y-2 pb-4 md:pb-1 space-y-1'>
+                                        <div className='w-full'>
+                                        <h1 className='font-semibold text-md text-nowrap'>{item.h}</h1>
+                                        <h2 className='text-[12px] text-[#ffffffa7] font-thin'>{item.sh}</h2>
+                                        </div>
+                                        <input className='text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1' id={item.labelName} name={item.labelName} type={item.type} accept={item.accept} onChange={(e)=>handleFormData(item.labelName,e)} placeholder='Enter your details here..'/>
+                                    </div>
+                                ))
+                            }
+                                {isFilled && <p className='py-2 text-[12px] text-[#f00000] text-center'>Please fill the required inputs</p>}
+                                <button type='submit' onClick={e=>handleFormSubmit(e)} className='py-2 bg-[#ff2f00] rounded-md w-full'>Submit</button>
+                            </form>
+                         </div> : <Loader/>}
         </Section>
     </>)
 }
