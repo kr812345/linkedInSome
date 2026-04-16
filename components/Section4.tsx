@@ -19,7 +19,7 @@ const Section4 = () => {
                     <div>
                         <h1 className='text-3xl sm:text-5xl lg:text-6xl font-bold text-shadow-[#ff2f00] text-shadow-md'>How It Works ?</h1>
                         {/* <button onClick={() => (redirect('/roster'))} className='rounded-full px-3 py-2 mt-6 bg-[#ff2f00] shadow-[#ff2f00] drop-shadow-lg drop-shadow-y-[#ff2f00] shadow-md font-semibold'>Try to Roast me</button> */}
-                        <button onClick={() => (redirect('/roster'))} className='rounded-full px-3 py-2 mt-6 bg-[#ff2f00] shadow-[#ff2f00] drop-shadow-lg drop-shadow-y-[#ff2f00] shadow-md font-semibold'>Let's See</button>
+                        <button onClick={() => (redirect('/roster'))} className='rounded-full px-3 py-2 mt-6 bg-[#ff2f00] shadow-[#ff2f00] drop-shadow-lg drop-shadow-y-[#ff2f00] shadow-md font-medium'>Let's See</button>
                     </div>
                 </div>
 

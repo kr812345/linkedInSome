@@ -1,90 +1,216 @@
-'use client'
-import react from 'react';
-import Section from '@/components/Section';
-import { toast } from "sonner";
-import { redirect } from 'next/navigation';
-import { useLLMResponseStore } from '../Store/store.llmResponse';
-import Loader from '@/components/Loader';
+"use client";
+import react from "react";
+import Section from "@/components/Section";
+import { toast, Toaster } from "sonner";
+import { useRouter } from "next/navigation";
+import { useLLMResponseStore } from "../Store/store.llmResponse";
+import Loader from "@/components/Loader";
+import Link from "next/link";
+import Improve from "../Improve/page";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const userNichePage = () => {
-    const [Image, setImage] = react.useState<string | null>(null);
-    const [isFilled, setIsFilled] = react.useState<boolean|null>(false);
-    const [formData_, setFormData_] = react.useState<Map<string, string | File> | null>(new Map());
-    const { setData } = useLLMResponseStore();
-    const [isLoading, setIsLoading] = react.useState<boolean | null>(false);
+  const router = useRouter();
+  const { data, setData } = useLLMResponseStore();
+  const [formData_, setFormData_] = react.useState<{
+    goal?: string;
+    resume?: File;
+    model?: string;
+  }>({});
+  const [isDisabled, setIsDisabled] = react.useState<boolean | null>(true);
+  const [isLoading, setIsLoading] = react.useState<boolean | null>(false);
+  const [error, setError] = react.useState<string | null>(null);
 
-    const formLabels = [{h:"Goal", sh:"What do you want to do ?", labelName:"goal", type: 'text', accept: 'text'}, 
-                        // {h:"You want to call yourself ?", sh:"Eg: Software Engineer, devops Engineer, Assitant Prof.", labelName:"callYourself", type: 'text'}, 
-                        {h:"Resume (Optional)", sh:"To know your skillset.", labelName:"resume", type: 'file', accept: 'application/pdf'}];
-    
-    const handleFormData = async (name: string, event: react.ChangeEvent) => {
-        if (name === 'goal') {
-            setFormData_(prev => {
-                prev?.set('goal', event.target.value);
-                return prev;
-            });
-        }
-        if (name === 'resume') {
-            setFormData_(prev => {
-                prev?.set('resume', event.target.files[0]);
-                return prev;
-            });
-        }
-        console.log(formData_);   
+  const formLabels = [
+    {
+      h: "Goal",
+      sh: "What do you want to do ?",
+      labelName: "goal",
+      type: "text",
+      accept: "text",
+    },
+    // {h:"You want to call yourself ?", sh:"Eg: Software Engineer, devops Engineer, Assitant Prof.", labelName:"callYourself", type: 'text'},
+    {
+      h: "Resume",
+      sh: "To know your skillset.",
+      labelName: "resume",
+      type: "file",
+      accept: "application/pdf",
+    },
+  ];
+
+  const models = [
+    { idx: 0, option: "select model" },
+    { idx: 1, option: "groq" },
+    { idx: 2, option: "gemini 2.5 flash" },
+  ];
+
+  const handleFormData = async (
+    name: string,
+    event: react.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    let value: string | File | undefined;
+
+    if (name == 'resume') {
+      const files = (event.target as HTMLInputElement).files;
+      value = files && files[0] ? files[0] : undefined;
+    } else {
+      value = event.target.value;
     }
 
-    const handleFormSubmit = async (event: react.MouseEvent) => {
-        setIsLoading(true);
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append('resume', formData_.get('resume') as File);
-        formData.append('goal', formData_.get('goal') as string);
+    setFormData_((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // if (name === "goal") {
+    //   setFormData_((prev) => ({
+    //     ...prev,
+    //     name: event.target.value,
+    //   }));
+    // }
+    // if (name === "resume") {
+    //   setFormData_((prev) => ({
+    //     ...prev,
+    //     name: event.target.files[0],
+    //   }));
+    // }
+    // if (name === "model") {
+    //   setFormData_((prev) => ({
+    //     ...prev,
+    //     name: event.target.value,
+    //   }));
+    // }
+  };
+  
+  react.useEffect(()=>{
+    console.log(formData_);
+    setIsDisabled(!(formData_['goal'] && formData_['resume'] && formData_['model']));
+  },[formData_])
 
-        if (formData_.get('goal')) {
-            const response =  await fetch(`http://localhost:5000/v1/api/improve`,{
-                method: 'POST',
-                body: formData,
-            })
-            
-            if (!response) { throw new Error("Please Try again, There is some Issue")};
-            setIsLoading(false);
-            const resData = await response.json();
-            console.log('This is the form response, we get: ', resData);
-            if (resData.success) {
-                setData({...resData.data.json()});
-                redirect(`/improve`);
-            } else {
-                toast('There is some issue, Please try again. \n or contact Admin if the issue persist.');
-            }
-        } 
+  const handleFormSubmit = async (event: react.MouseEvent) => {
+    event.preventDefault();
+    if (isDisabled) {
+      toast('Please fill all details');
+      return;
+    };
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("resume", formData_["resume"] as File);
+    formData.append("goal", formData_["goal"] as string);
+    formData.append("model", formData_["model"] as string);
+
+    if (formData_["goal"]) {
+      const response = await fetch(`http://localhost:5000/v1/api/improve`, {
+        method: "POST",
+        body: formData,
+      });
+
+      setIsLoading(false);
+      if (!response.ok) {
+        toast(
+          `Status: ${response.status}, Please Try again, There is some Issue`,
+        );
+      }
+      const resData = await response.json();
+      console.log("This is the form response, we get: ", resData);
+
+      setData({ ...JSON.parse(resData.data) });
+      router.push("/improve");
     }
+  };
 
-    const handleFilled = () => {
-        setIsFilled(true);
-    }
+  // react.useEffect(()=>{
 
-    return (<>
-        <Section>
-            {!isLoading ? <div className='p-4 border border-[#ff2f00] rounded-lg flex flex-col gap-4 '>
-                            <form action={handleFormData}>
-                                {formLabels.map((item,idx)=>(
-                                    <div key={idx} className='md:flex md:space-y-2 pb-4 md:pb-1 space-y-1'>
-                                        <div className='w-full'>
-                                        <h1 className='font-semibold text-md text-nowrap'>{item.h}</h1>
-                                        <h2 className='text-[12px] text-[#ffffffa7] font-thin'>{item.sh}</h2>
-                                        </div>
-                                        <input className='text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1' id={item.labelName} name={item.labelName} type={item.type} accept={item.accept} onChange={(e)=>handleFormData(item.labelName,e)} placeholder='Enter your details here..'/>
-                                    </div>
-                                ))
-                            }
-                                {isFilled && <p className='py-2 text-[12px] text-[#f00000] text-center'>Please fill the required inputs</p>}
-                                <button type='submit' onClick={e=>handleFormSubmit(e)} className='py-2 bg-[#ff2f00] rounded-md w-full'>Submit</button>
-                            </form>
-                         </div> : <Loader/>}
-        </Section>
-    </>)
-}
+  //     if (!data.message) {
+  //         return (
+  //             <>
+  //             <Improve/>
+  //             </>
+  //         )
+  //     }
+  // }
+  // ,[data])
+
+  return (
+    <>
+      <Section>
+        <Toaster />
+        {!isLoading ? (
+          <div className="p-4 border border-[#ff2f00] rounded-lg flex flex-col gap-4 ">
+            <form onSubmit={e=>handleFormSubmit(e)}>
+              {formLabels.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="md:flex md:space-y-2 pb-4 md:pb-1 space-y-1"
+                >
+                  <div className="w-full">
+                    <h1 className="font-semibold text-md text-nowrap">
+                      {item.h}
+                    </h1>
+                    <h2 className="text-[12px] text-[#ffffffa7] font-thin">
+                      {item.sh}
+                    </h2>
+                  </div>
+                  <input
+                    className="text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1"
+                    id={item.labelName}
+                    name={item.labelName}
+                    type={item.type}
+                    accept={item.accept}
+                    onChange={(e) => handleFormData(item.labelName, e)}
+                    placeholder="Enter your details here.."
+                    required
+                  />
+                </div>
+              ))}
+              <div
+                // key={idx}
+                className="md:flex md:space-y-2 pb-4 md:pb-1 space-y-1"
+              >
+                <div className="w-full">
+                  <h1 className="font-semibold text-md text-nowrap">
+                    {/* {item.h} */} Model
+                  </h1>
+                  <h2 className="text-[12px] text-[#ffffffa7] font-thin">
+                    {/* {item.sh} */} Choose Model
+                  </h2>
+                </div>
+                <select
+                  name="model"
+                  id="model"
+                  onChange={(e) => handleFormData("model", e)}
+                  className="focus:outline-none border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1 text-sm"
+                  required
+                  defaultValue="select model"
+                >
+                  {models.map((item, idx) => (
+                    <option
+                      key={item.idx}
+                      value={item.option}
+                      className="bg-black border border-[#ff2f00]"
+                    >
+                      {item.option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                type="submit"
+                // onClick={(e) => handleFormSubmit(e)}
+                className="py-2 bg-[#ff2f00] rounded-md w-full disabled:bg-[#ff2f0088] hover:bg-[#ff3f00]"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        ) : (
+          <Loader />
+        )}
+      </Section>
+    </>
+  );
+};
 
 export default userNichePage;

@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from 'next/font/google';
 import Navbar from "@/components/Navbar";
 import { Analytics } from "@vercel/analytics/next"
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "LinkRoast",
@@ -29,6 +30,7 @@ export default function RootLayout({
           {children}
           {/* <Analytics/> */}
         </main>
+      <Footer/>
       </body>
     </html>
   );

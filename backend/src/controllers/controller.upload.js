@@ -43,24 +43,6 @@ export const uploadImage = async (req, res) => {
     }
 }
 
-// export const aiTellMe = async (req, res) => {
-//     try {
-//         const file = req.file;
-        
-//         if (!file) return res.status(404).json({message: "No Image"});
-        
-//         const llm = {gemini: 1}
-//         const inputImage = file.path;   
-
-//         const llmOutput = await feedToLLM(llm, inputImage);
-
-//         return res.status(200).json({success: true, message: "Image uploaded successfully", data: llmOutput});
-//     } catch (err) {
-//         console.log("error: ", err);
-//         res.status(500).json({success: false, message: "error in aiTellMe"});
-//     }
-// }
-
 
 export const improve = async (req, res) => {
     try {
@@ -73,11 +55,11 @@ export const improve = async (req, res) => {
         const text = await extractTextFromPDF(file.path);
         if (!text) throw new Error('Failed to extract Text.');
         
-        const llm = {gemini: true, openai: 0} 
-        const llmResponse = await feedToLLM({systemPrompt: improveProfilePrompt, userData: {text, goal: data.goal}, llm});
+        // const llm = {gemini: true, openai: 0} 
+        const llmResponse = await feedToLLM({systemPrompt: improveProfilePrompt, userData: {text, goal: data.goal}, llm: data.model});
         console.log(llmResponse);
 
-        const final_llmResponse = handleRetries(llmResponse,improveProfilePrompt,text, goal= data.goal,llm, retries=3, delay=1000);
+        const final_llmResponse = await handleRetries(llmResponse,improveProfilePrompt,text,data.goal,data.model, 3,1000);
         // const final_llmResponse = cleanLLMResponse(llmResponse);
 
         return res.status(200).json({ success: true, message: 'got the ai response successfully', data: `${JSON.stringify(final_llmResponse)}`})

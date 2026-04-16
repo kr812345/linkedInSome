@@ -1,37 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LINKROAST
 
-## Getting Started
+### THE PROFESSIONAL PROFILE ANALYZER
 
-First, run the development server:
+LinkRoast is a high-performance profile optimization engine. It utilizes advanced LLM orchestration to provide critical analysis and strategic refinement for LinkedIn identities. Developed with a focus on technical luxury and uncompromising feedback.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## CORE ENGINE
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The platform operates on a dual-feedback architecture designed to maximize professional conversion.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 01. CRITICAL ANALYSIS (THE ROAST)
+Identifies superficiality, generic positioning, and structural weaknesses in professional narratives. The system analyzes headlines, summaries, and experience blocks to expose areas of low impact.
 
-## Learn More
+### 02. STRATEGIC REFINEMENT (THE REFINE)
+Reconstructs professional identities using high-impact terminology and ATS-optimized structures. It generates alternative narratives that prioritize clarity, authority, and industry relevance.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## TECHNICAL ARCHITECTURE
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Custom-built for speed and precision.
 
-## Deploy on Vercel
+| COMPONENT | TECHNOLOGY |
+| :--- | :--- |
+| **Framework** | Next.js 15 (App Router) |
+| **Orchestration** | LangChain / LangGraph |
+| **Intelligence** | Google Gemini 1.5 Pro |
+| **Motion** | GSAP / Framer Motion |
+| **Database** | MongoDB / Redis |
+| **Assets** | Cloudinary |
+| **Interface** | Tailwind CSS / Lucide |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# linkedInSome
+## DEVELOPMENT
+
+### ENVIRONMENT SETUP
+
+1.  **Initialize dependencies**:
+    ```bash
+    pnpm install
+    ```
+
+2.  **Configure vectors**:
+    Establish a `.env` file with the following required variables:
+    - `GEMINI_API_KEY`
+    - `MONGODB_URI`
+    - `CLOUDINARY_URL`
+    - `REDIS_URL`
+
+3.  **Launch execution loop**:
+    ```bash
+    pnpm run dev
+    ```
+
+---
+
+## DESIGN PHILOSOPHY
+
+LinkRoast adheres to a minimalist, technical aesthetic. No distractions. No filler. Just high-precision data and actionable insights.
+
+- **Technical Luxury**: A dark-mode primary interface with glassmorphic depth and subtle gradients.
+- **Synchronized Motion**: GSAP-driven entrance sequences and fluid state transitions.
+- **Precision Typography**: Utilizing modern sans-serif fonts optimized for technical legibility.
+
+---
+
+DEVELOPED BY KRISHNA YADAV
+© 2026 LINKROAST. ALL RIGHTS RESERVED.

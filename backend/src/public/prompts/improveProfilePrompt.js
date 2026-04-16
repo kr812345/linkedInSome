@@ -30,16 +30,22 @@ Output Requirements:
 - Keep content concise but high-impact
 - Write like a top 1% LinkedIn creator who understands hiring psychology
 
+limit: 
+banner: string
+bio: max-string(220)
+about: max-string(2000)
+posts: array[string.length(3)]
+
 JSON Structure:
 {
   "banner": "A clear visual concept + text prompt for generating a premium LinkedIn banner (include layout idea, text, colors, vibe, and alignment with user's goal)",
   "profilePicture": "Precise improvement suggestion for profile photo (lighting, framing, expression, background, styling) tailored to user's target role",
   "bio": "A high-converting headline (max 220 characters) combining niche, value proposition, and proof aligned with user's goal",
   "about": "A compelling 'About' section using hook → story → proof → value → call-to-action (max 200 words, tailored to user's journey and ambition)",
-  "featured": [
-    "Specific high-impact project/post/portfolio idea aligned with user's goal",
-    "Second strong credibility-building asset",
-    "Third asset that increases trust or visibility"
+  "posts": [
+    "1st suggested post on Specific high-impact project/post/portfolio idea aligned with user's goal",
+    "2nd suggested Second strong credibility-building asset",
+    "Third asset that increases trust or visibility",
   ]
 }
 

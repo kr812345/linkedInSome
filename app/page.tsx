@@ -21,7 +21,6 @@ const page = () => {
       <Section4 />
       <Section5 />
       <FAQs />
-      <Footer />
     </main>
   )
 }

@@ -18,7 +18,6 @@ export default async function
                     file: `${inputImage}`,
                 })    
             }
-            console.log(systemPrompt);
             const response = await ai.models.generateContent({
                 model: `${'gemini-2.5-flash'}`,
                 contents: createUserContent([
