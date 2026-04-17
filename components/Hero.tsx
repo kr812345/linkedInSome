@@ -45,7 +45,7 @@ const Hero = () => {
 
             {/* Right Side — hidden on mobile */}
             <div className='hidden lg:flex justify-center flex-col items-center'>
-              <Image src={'./linkedin_graghic.svg'} width={600} height={600} alt='linked_graphic' />
+              <Image src={'./linkedin_graghic.svg'} width={400} height={400} alt='linked_graphic' />
             </div>
             <div className='flex justify-center lg:justify-end items-center mt-8 lg:mt-0 -translate-y-10 not-md:-translate-y-28'>
               <Image className='animate-bounce' src={'./scroll_down.svg'} width={25} height={25} alt='\/' />

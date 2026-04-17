@@ -9,6 +9,7 @@
     "dev": "NODE_ENV=development concurrently \"pnpm:next:dev\" \"pnpm:server\"",
     "build": "next build",
     "start": "NODE_ENV=production next start",
+    "start:server": "node backend/server.js",
     "lint": "eslint"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
     "framer-motion": "^12.23.26",
     "gsap": "^3.14.2",
     "langchain": "^1.2.0",

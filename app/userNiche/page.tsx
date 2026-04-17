@@ -102,7 +102,8 @@ const userNichePage = () => {
     formData.append("model", formData_["model"] as string);
 
     if (formData_["goal"]) {
-      const response = await fetch(`http://localhost:5000/v1/api/improve`, {
+      const serverUrl = SERVER_URL || "http://localhost:5000";
+      const response = await fetch(`${serverUrl}/v1/api/improve`, {
         method: "POST",
         body: formData,
       });
@@ -135,75 +136,86 @@ const userNichePage = () => {
 
   return (
     <>
-      <Section>
+      <Section withSun={true}>
         <Toaster />
         {!isLoading ? (
-          <div className="p-4 border border-[#ff2f00] rounded-lg flex flex-col gap-4 ">
-            <form onSubmit={e=>handleFormSubmit(e)}>
-              {formLabels.map((item, idx) => (
+          <div className="flex flex-col items-center w-full max-w-xl gap-8 relative z-10">
+            <div className="flex flex-col items-center text-center">
+              <h1 className="text-2xl sm:text-4xl font-bold mb-4 text-white text-shadow-md text-shadow-[#ff2f00]">
+                Refine Your Profile
+              </h1>
+              <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+                Enter details to get your improved Linkedin Profile
+              </p>
+            </div>
+            
+            <div className="p-8 border border-[#ff2f00]/30 bg-black/40 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col gap-6 w-full">
+              <form onSubmit={e=>handleFormSubmit(e)}>
+                {formLabels.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="md:flex md:space-y-2 pb-4 md:pb-1 space-y-1"
+                  >
+                    <div className="w-full">
+                      <h1 className="font-semibold text-md text-nowrap">
+                        {item.h}
+                      </h1>
+                      <h2 className="text-[12px] text-[#ffffffa7] font-thin">
+                        {item.sh}
+                      </h2>
+                    </div>
+                    <input
+                      className="text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1"
+                      id={item.labelName}
+                      name={item.labelName}
+                      type={item.type}
+                      accept={item.accept}
+                      onChange={(e) => handleFormData(item.labelName, e)}
+                      placeholder="Enter your details here.."
+                      required
+                    />
+                  </div>
+                ))}
                 <div
-                  key={idx}
+                  // key={idx}
                   className="md:flex md:space-y-2 pb-4 md:pb-1 space-y-1"
                 >
                   <div className="w-full">
                     <h1 className="font-semibold text-md text-nowrap">
-                      {item.h}
+                      {/* {item.h} */} Model
                     </h1>
                     <h2 className="text-[12px] text-[#ffffffa7] font-thin">
-                      {item.sh}
+                      {/* {item.sh} */} Choose Model
                     </h2>
                   </div>
-                  <input
-                    className="text-sm border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1"
-                    id={item.labelName}
-                    name={item.labelName}
-                    type={item.type}
-                    accept={item.accept}
-                    onChange={(e) => handleFormData(item.labelName, e)}
-                    placeholder="Enter your details here.."
+                  <select
+                    name="model"
+                    id="model"
+                    onChange={(e) => handleFormData("model", e)}
+                    className="focus:outline-none border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1 text-sm"
                     required
-                  />
+                    defaultValue="select model"
+                  >
+                    {models.map((item, idx) => (
+                      <option
+                        key={item.idx}
+                        value={item.option}
+                        className="bg-black border border-[#ff2f00]"
+                      >
+                        {item.option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              ))}
-              <div
-                // key={idx}
-                className="md:flex md:space-y-2 pb-4 md:pb-1 space-y-1"
-              >
-                <div className="w-full">
-                  <h1 className="font-semibold text-md text-nowrap">
-                    {/* {item.h} */} Model
-                  </h1>
-                  <h2 className="text-[12px] text-[#ffffffa7] font-thin">
-                    {/* {item.sh} */} Choose Model
-                  </h2>
-                </div>
-                <select
-                  name="model"
-                  id="model"
-                  onChange={(e) => handleFormData("model", e)}
-                  className="focus:outline-none border border-[#ff2f00] rounded-md h-fit !w-full px-2 py-1 text-sm"
-                  required
-                  defaultValue="select model"
+                <button
+                  type="submit"
+                  // onClick={(e) => handleFormSubmit(e)}
+                  className="py-2 bg-[#ff2f00] rounded-md w-full disabled:bg-[#ff2f0088] hover:bg-[#ff3f00]"
                 >
-                  {models.map((item, idx) => (
-                    <option
-                      key={item.idx}
-                      value={item.option}
-                      className="bg-black border border-[#ff2f00]"
-                    >
-                      {item.option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                type="submit"
-                // onClick={(e) => handleFormSubmit(e)}
-                className="py-2 bg-[#ff2f00] rounded-md w-full disabled:bg-[#ff2f0088] hover:bg-[#ff3f00]"
-              >
-                Submit
-              </button>
-            </form>
+                  Submit
+                </button>
+              </form>
+            </div>
           </div>
         ) : (
           <Loader />

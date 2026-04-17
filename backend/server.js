@@ -1,34 +1,76 @@
-console.log("hello");
 import 'dotenv/config';
-// dotenv.config({ path: './.env' });  
-import './src/config/envConfig.js';
+import cors from 'cors';
 import express from 'express';
-import connectDB from './src/config/db.js';
+import rateLimit from 'express-rate-limit';
+import './src/config/envConfig.js';
 import './src/service/service.gemini.js';
 import './src/service/service.openai.js';
-import uploadRouter from './src/routes/route.upload.js';
-import cors from 'cors';
+import linkRoastRouter from './src/routes/route.upload.js';
 
 const port = process.env.PORT || 5000;
 
 const app = express();
 
-app.use(express.json()); // for json to parse in the request else body which is in json will not be parsed.
+// Trust proxy for Render/Vercel (essential for accurate rate limiting and HTTPS detection)
+app.set('trust proxy', 1);
+
+app.use(express.json()); // for json to parse in the request
 app.use(express.urlencoded({extended: true})); // for formdata.
-app.use(cors({ origin: ['http://localhost:3000', 'https://linkroast.vercel.app'] }))
+
+// Rate Limiting Configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // Limit each IP to 20 requests per 15 minutes
+  standardHeaders: true, 
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many requests from this IP, please try again after 15 minutes."
+  }
+});
+
+// Apply rate limiter to all routes
+app.use(limiter);
+
+// Dynamic CORS configuration
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'https://linkroast.vercel.app', 
+  process.env.CORS_ORIGIN
+].filter(Boolean);
+
+app.use(cors({ 
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 
 
-// connectDB();
-// console.log("GEMINI KEY:", process.env.GEMINI_API_KEY); 
-// console.log(process.env);
-// console.log("MONGO URI:", process.env.MONGO_URI);  
-
-app.use('/v1/api', uploadRouter);
+app.use('/v1/api', linkRoastRouter);
 
 app.get('/health', (req, res) => {
-  res.send('Server is running');
+  res.status(200).send('OK');
 });
 
-app.listen(port, "0.0.0.0", () => {
-  console.log(`\n\n ''' \n\n Server is running at: http://localhost:${port} \n\n ''' \n\n`);
+const server = app.listen(port, "0.0.0.0", () => {
+  console.log(`\n\n ''' \n\n Server is running at: http://0.0.0.0:${port} \n\n ''' \n\n`);
 });
+
+// Graceful Shutdown Logic
+const shutdown = () => {
+  console.log('Shutdown signal received: closing HTTP server');
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);

@@ -3,7 +3,7 @@ import feedToLLM from "./chooseLLM.js";
 
 export const handleRetries = async (
   llmResponse,
-  improveProfilePrompt,
+  prompt,
   text,
   goal,
   llm,
@@ -14,34 +14,24 @@ export const handleRetries = async (
   try {
     while (retries > 0) {
       const finalResponse = cleanLLMResponse(llmResponse);
-
-      return finalResponse;
+      
+      if (!finalResponse.error) return finalResponse;
     }
-
+  } catch (error) {
     if (retries <= 0) {
         return json("Please try again there is some error.");
     }
-  } catch (error) {
-    const llmResponse = await feedToLLM({
-      systemPrompt: improveProfilePrompt,
-      userData: { text, goal: goal, error: error },
+    
+    console.log(retries);
+
+    await new Promise(res => setTimeout (res, delay));
+
+    const nextResponse = await feedToLLM({
+      systemPrompt: prompt,
+      userData: { text, goal: goal, error: error.message },
       llm,
     });
-    const finalResponse = cleanLLMResponse(llmResponse);
 
-    if (finalResponse.error) {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      handleRetries(
-        llmResponse,
-        improveProfilePrompt,
-        text,
-        goal,
-        llm,
-        retries - 1,
-        delay,
-      );
-    }
-
-    return finalResponse;
+    return await handleRetries(nextResponse, prompt, text, goal, llm, retries - 1, delay);
   }
 };

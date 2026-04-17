@@ -1,17 +1,21 @@
 import OpenAI from "openai";
-import improveProfilePrompt from "../public/prompts/improveProfilePrompt";
 
 const client = new OpenAI({
-    apiKey: process.env.GROQ_API_KEY,
-    baseURL: "https://api.groq.com/openai/v1",
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
-const askGROQ = (systemPrompt, userData, inputImage) => {
+export default async function askGroq(systemPrompt, userData, inputImage) {
+    try {
 
-    const response = await client.responses.create({
-        model: "openai/gpt-oss-20b",
-        input: `System: ${systemPrompt}
-                User: ${userData}`,
-    });
-    console.log(response.output_text);
+        const response = await client.responses.create({
+            model: "openai/gpt-oss-20b",
+            input: `System: ${systemPrompt} \n\n
+            UserData: ${userData}`,
+        });
+        console.log("Groq response: ", response.output_text);
+        return response.output_text;
+    } catch (error) {
+        throw new Error("Groq Error: ", error);
+    }
 }
