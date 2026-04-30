@@ -55,6 +55,14 @@ app.use(cors({
 
 app.use('/v1/api', linkRoastRouter);
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "LinkRoast API is active and healthy.",
+    version: "1.0.0"
+  });
+});
+
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
