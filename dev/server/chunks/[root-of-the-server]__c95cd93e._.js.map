@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 46, "column": 0}, "map": {"version":3,"sources":["file:///home/krishna/Documents/Code/shipIt/linkedIn/app/api/health/route.ts"],"sourcesContent":["import { NextResponse } from \"next/server\";\n\nexport async function GET(req: Request) {\n  try {\n    return NextResponse.json({ success: true }, { status: 200 });\n  } catch (err) {\n    return NextResponse.json({ error: \"not working\" }, { status: 500 });\n  }\n}\n"],"names":[],"mappings":";;;;AAAA;;AAEO,eAAe,IAAI,GAAY;IACpC,IAAI;QACF,OAAO,kTAAY,CAAC,IAAI,CAAC;YAAE,SAAS;QAAK,GAAG;YAAE,QAAQ;QAAI;IAC5D,EAAE,OAAO,KAAK;QACZ,OAAO,kTAAY,CAAC,IAAI,CAAC;YAAE,OAAO;QAAc,GAAG;YAAE,QAAQ;QAAI;IACnE;AACF"}}]
-}

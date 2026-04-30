@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 36, "column": 0}, "map": {"version":3,"sources":["file:///home/krishna/Documents/Code/shipIt/linkedIn/app/page.tsx"],"sourcesContent":["import React from 'react'\nimport dotenv from \"dotenv\";\n\ndotenv.config();\n\nconst page = () => {\n  return (\n    <div className=\"flex h-screen items-center justify-center\">\n      <div className=\"text-3xl\">\n        <a href=\"/roster\">Go to Roster</a>\n      </div>\n    </div>\n  );\n};\n\nexport default page;\n"],"names":[],"mappings":";;;;;AACA;;;AAEA,oMAAM,CAAC,MAAM;AAEb,MAAM,OAAO;IACX,qBACE,gZAAC;QAAI,WAAU;kBACb,cAAA,gZAAC;YAAI,WAAU;sBACb,cAAA,gZAAC;gBAAE,MAAK;0BAAU;;;;;;;;;;;;;;;;AAI1B;uCAEe"}}]
-}

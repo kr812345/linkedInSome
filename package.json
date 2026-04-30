@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "next:dev": "next dev",
-    "server": "nodemon backend/server.js --env-file .env",
-    "dev": "concurrently \"pnpm:next:dev\" \"pnpm:server\"",
+    "server": "NODE_ENV=development nodemon backend/server.js",
+    "dev": "NODE_ENV=development concurrently \"pnpm:next:dev\" \"pnpm:server\"",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production next start",
+    "start:server": "node backend/server.js",
     "lint": "eslint"
   },
   "dependencies": {
@@ -16,11 +17,15 @@
     "@gsap/react": "^2.1.2",
     "@heroicons/react": "^2.2.0",
     "@langchain/langgraph": "^1.0.4",
+    "@vercel/analytics": "^1.6.1",
+    "axios": "^1.13.5",
+    "canvas": "^3.2.3",
     "cloudinary": "^2.8.0",
     "concurrently": "^9.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
     "framer-motion": "^12.23.26",
     "gsap": "^3.14.2",
     "langchain": "^1.2.0",
@@ -40,7 +45,12 @@
     "react-markdown": "^10.1.0",
     "react-spinners": "^0.17.0",
     "redis": "^5.10.0",
-    "sonner": "^2.0.7"
+    "sharp": "^0.34.5",
+    "sonner": "^2.0.7",
+    "tailwind-scrollbar-hide": "^4.0.0",
+    "unpdf": "^1.4.0",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -48,6 +58,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.10.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "tailwindcss": "^4",

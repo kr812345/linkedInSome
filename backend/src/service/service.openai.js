@@ -1,5 +1,6 @@
-import rosterPrompt from "../public/prompts/roster.js";
+import rosterPrompt from "../public/prompts/rosterPrompt.js";
 import OpenAI from "openai";
+
 const client = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 
 const askOpenAi = async (inputImage) => {

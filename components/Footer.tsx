@@ -1,24 +1,44 @@
 import Link from 'next/link'
 import React from 'react'
+import { FaTwitter, FaLinkedin, FaEnvelope } from 'react-icons/fa6'
 
 const Footer = () => {
-  return (
-    <>
-    <div className='h-100 w-full text-white bg-[#ff2f0050] flex justify-around'>
-            <h1 className='text-2xl font-bold w-fit h-fit px-4 py-10 '>Roast.AI</h1>
-            <div className='w-6/12 p-10 grid grid-cols-2 '>
-                <div>
-                <h1 className='font-semibold'>Product</h1>
-                    <Link href={'/roster'} className='text-gray-400'>Roster</Link>
+    return (
+        <footer className="w-full bg-[#050505] border-t border-white/10 py-12 px-6 sm:px-12 lg:px-24">
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-end gap-8">
+                {/* Left Side */}
+                <div className="flex flex-col gap-2 text-center md:text-left">
+                    <div className="flex items-center justify-center md:justify-start gap-2">
+                        <img src="/linkRoast_logo.svg" alt="LinkRoast Logo" className="h-6 w-6 object-contain" />
+                        <h2 className="text-2xl font-bold text-[#ff2f00] tracking-tight">LinkRoast</h2>
+                    </div>
+                    <p className="text-gray-500 text-xs sm:text-sm font-medium">
+                        Copyright © 2026 All rev: LinkRoast
+                    </p>
                 </div>
-                <div>
-                    <h1 className='font-semibold'>Contact</h1>
-                    <Link href='mailto:jackwatsen0@gmail.com' className='font-light text-gray-400'>email: jackwatsen0@gmail.com</Link>
+
+                {/* Right Side */}
+                <div className="flex flex-col items-center md:items-end gap-4">
+                    <div className="flex gap-6 items-center">
+                        <a href="mailto:krishnay812345@gmail.com" target="_blank" rel="noopener noreferrer">
+                            <FaEnvelope className="size-5 text-gray-300 hover:text-white transition-colors cursor-pointer" />
+                        </a>
+                        <a href="https://x.com/kr812345" target="_blank" rel="noopener noreferrer">
+                            <FaTwitter className="size-5 text-gray-300 hover:text-white transition-colors cursor-pointer" />
+                        </a>
+                        <a href="https://linkedin.com/in/krishna-yadav-kr812345" target="_blank" rel="noopener noreferrer">
+                            <FaLinkedin className="size-5 text-gray-300 hover:text-white transition-colors cursor-pointer" />
+                        </a>
+                    </div>
+                    <div className="flex gap-6 text-xs sm:text-sm font-medium">
+                        <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">Terms</Link>
+                        <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">Privacy</Link>
+                        <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link>
+                    </div>
                 </div>
             </div>
-    </div>
-    </>
-)
+        </footer>
+    )
 }
 
 export default Footer
