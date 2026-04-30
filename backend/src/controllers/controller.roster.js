@@ -1,4 +1,3 @@
-import { ClockFading } from 'lucide-react';
 // import { askLLM } from '../service/service.gemini.js';
 import uploadToCloud,{ deleteFromCloudinary } from '../service/service.cloudinary.js';
 import feedToLLM from '../helper/chooseLLM.js';
