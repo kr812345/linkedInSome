@@ -1,0 +1,39 @@
+.git
+node_modules
+.next
+.vercel
+app
+components
+public
+lib
+types
+DOCs
+uploads
+
+# Config & Environment
+.env*
+.sample.env
+*.env
+
+# Build & Tooling
+Dockerfile
+.dockerignore
+package.json
+pnpm-lock.yaml
+tsconfig.json
+next-env.d.ts
+next.config.ts
+tailwind.config.ts
+postcss.config.mjs
+eslint.config.mjs
+
+# Documentation & Misc
+README.md
+PLAN.md
+SYSTEM_DESIGN.md
+*.png
+*.sh
+*.yaml
+.gitignore
+.DS_Store
+
