@@ -1,15 +1,27 @@
-FROM node:lts-alpine
+# Use a slim Node.js image for faster builds
+FROM node:20-slim
 
+# Set working directory to root first
 WORKDIR /app
 
-COPY . .
+# Copy only the backend package.json to install dependencies first (caching)
+COPY backend/package.json ./backend/
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install backend dependencies using npm
+RUN cd backend && npm install --production
 
-ENV CI=true
+# Now copy the rest of the backend files
+COPY backend/ ./backend/
 
-RUN pnpm install 
+# Move into the backend directory for execution
+WORKDIR /app/backend
 
-EXPOSE 3000
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=5000
 
-CMD ["pnpm", "dev"]
+# Expose backend port
+EXPOSE 5000
+
+# Start the backend server
+CMD ["node", "api/index.js"]
