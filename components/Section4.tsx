@@ -6,7 +6,7 @@ const Section4 = () => {
     const items = [
         { i: "01", title: "Upload", desc: "Upload your LinkedIn Profile screenshot" },
         { i: "02", title: "LLM", desc: "AI Reads & Understand your profile" },
-        { i: "03", title: "Roast", desc: "AI reads and give feedback on your profile" },
+        { i: "03", title: "Roast", desc: "AI reads and give Roast on your profile" },
         { i: "04", title: "Improve", desc: "Use the feedback and improve your linkedIn profile" }
     ]; 
     // remove this line and rewrite the comments, as you might not need 

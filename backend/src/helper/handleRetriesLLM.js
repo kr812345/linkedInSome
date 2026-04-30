@@ -10,28 +10,33 @@ export const handleRetries = async (
   retries,
   delay,
 ) => {
+  let currentRetries = retries;
+  let currentResponse = llmResponse;
 
-  try {
-    while (retries > 0) {
-      const finalResponse = cleanLLMResponse(llmResponse);
+  while (currentRetries >= 0) {
+    try {
+      const finalResponse = cleanLLMResponse(currentResponse);
       
+      // If parsing is successful and no schema error, return it
       if (!finalResponse.error) return finalResponse;
+      
+      console.warn(`[Retry ${retries - currentRetries + 1}] Parsing failed: ${finalResponse.message}`);
+    } catch (error) {
+      console.error(`[Retry ${retries - currentRetries + 1}] Unexpected Error:`, error.message);
     }
-  } catch (error) {
-    if (retries <= 0) {
-        return json("Please try again there is some error.");
-    }
-    
-    console.log(retries);
 
-    await new Promise(res => setTimeout (res, delay));
+    if (currentRetries === 0) break;
 
-    const nextResponse = await feedToLLM({
+    currentRetries--;
+    console.log(`Retrying... (${currentRetries} attempts left)`);
+    await new Promise(res => setTimeout(res, delay));
+
+    currentResponse = await feedToLLM({
       systemPrompt: prompt,
-      userData: { text, goal: goal, error: error.message },
+      userData: { text, goal, error: "Previous response was invalid JSON or failed schema validation." },
       llm,
     });
-
-    return await handleRetries(nextResponse, prompt, text, goal, llm, retries - 1, delay);
   }
+
+  throw new Error("Failed to get a valid response from AI after multiple attempts.");
 };

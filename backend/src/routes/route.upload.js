@@ -2,6 +2,7 @@ import express from 'express';
 import * as r from '../controllers/controller.roster.js';
 import * as i from '../controllers/controller.improve.js';
 import * as wl from '../controllers/controller.waitingList.js';
+import { shareRoast } from '../controllers/controller.share.js';
 import multer, { diskStorage } from 'multer';
 
 const fileFilter = (req, file, cb) => {
@@ -29,5 +30,6 @@ linkRoastRouter.post('/roast', upload.single('file'), r.roster);
 linkRoastRouter.post('/improve', upload.single('resume'), i.improve);
 // linkRoastRouter.post('/llm-tell-me', c.aiTellMe);
 linkRoastRouter.post('/waitinglist', wl.waitingList);
+linkRoastRouter.post('/shareRoast', shareRoast);
 
 export default linkRoastRouter;

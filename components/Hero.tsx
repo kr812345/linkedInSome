@@ -43,9 +43,9 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* Right Side — hidden on mobile */}
-            <div className='hidden lg:flex justify-center flex-col items-center'>
-              <Image src={'./linkedin_graghic.svg'} width={400} height={400} alt='linked_graphic' />
+            {/* Right Side — Now visible on mobile */}
+            <div className='flex justify-center flex-col items-center not-lg:hidden lg:mt-0'>
+              <Image src={'./linkedin_graghic.svg'} className="w-[80%] sm:w-[60%] lg:w-[400px]" width={400} height={400} alt='linked_graphic' />
             </div>
             <div className='flex justify-center lg:justify-end items-center mt-8 lg:mt-0 -translate-y-10 not-md:-translate-y-28'>
               <Image className='animate-bounce' src={'./scroll_down.svg'} width={25} height={25} alt='\/' />
@@ -53,6 +53,9 @@ const Hero = () => {
           </div>
         </div>
       </div>
+            <div className='flex justify-center flex-col items-center sm:hidden lg:mt-0'>
+              <Image src={'./linkedin_graghic.svg'} className="w-[80%] sm:w-[60%] lg:w-[400px]" width={400} height={400} alt='linked_graphic' />
+            </div>
     </>
   )
 }

@@ -1,3 +1,28 @@
+# 2026-04-30: Platform Hardening & Multi-Cloud Deployment
+
+Today focused on final production readiness, branding consistency, and re-architecting the deployment strategy for high-performance AI processing.
+
+### What was done:
+*   **Deployment Re-architecture**:
+    *   **Decoupled Backend**: Created a dedicated `backend/package.json` and `vercel.json` to allow independent deployment of the API. This enables hosting on high-timeout platforms like Railway to prevent AI gateway timeouts.
+    *   **Vercel Optimization**: Updated `server.js` to export the Express app for Vercel Serverless compatibility and added conditional listening logic.
+*   **Infrastructure & Performance**:
+    *   **Redis Optimization**: Updated cache expiry to 1 hour to ensure content freshness while maintaining speed.
+    *   **Secure Redis**: Implemented TLS (Secure Redis) support in `redisConfig.js` to support hosted providers like Upstash (required for serverless environments).
+*   **UI/UX Hardening**:
+    *   **Responsive Profile Improvement**: Completely rebuilt the "Improve Profile" page for a mobile-first experience, including responsive grids and sticky navigation.
+    *   **Robust Interactions**: Hardened the "Click-to-Copy" logic with asynchronous handling and improved visual hover feedback.
+    *   **File Validation**: Enforced strict image-only validation for the Roaster upload using MIME-type checking and frontend restrictions.
+*   **Branding & Content**:
+    *   **Visual Comparison**: Integrated a professional "Before & After" section in the landing page using SVG profile transformations.
+    *   **Emotional Copy**: Refined the marketing copy to move away from generic metrics toward authentic, emotional professional storytelling.
+    *   **Site Identity**: Integrated the official `linkRoast_logo.svg` across the Navbar, Footer, and SEO metadata.
+
+### What's next:
+*   **Live Multi-Cloud Deploy**: Push the Next.js frontend to Vercel and the Express API to Railway.
+*   **Production Load Testing**: Monitor Gemini API response times under concurrent user load.
+*   **Cloudinary Cleanup**: Implement a TTL or cleanup script for the uploaded profile screenshots in Cloudinary.
+
 # 2026-04-18: UX Optimization & Deployment Readiness
 
 Today we focused on making the application production-ready and improving the user experience during the AI processing cycle.

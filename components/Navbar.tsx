@@ -13,10 +13,7 @@ const Navbar = () => {
           {/* Logo Section */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-2">
-              {/* Placeholder Icon/Logo */}
-              <div className="h-8 w-8 bg-bg-primary rounded-md flex items-center justify-center text-white font-bold">
-                L
-              </div>
+              <img src="/linkRoast_logo.svg" alt="LinkRoast Logo" className="h-8 w-8 object-contain" />
               <span className="text-lg sm:text-xl font-bold text-text-primary">
                 LinkRoast
               </span>
@@ -27,17 +24,23 @@ const Navbar = () => {
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="hidden md:flex items-center gap-6">
               <Link
+                href="/"
+                className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
+              >
+                Home
+              </Link>
+              <Link
                 href="/roster"
                 className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
               >
-                Product
+                Roaster
               </Link>
-              {/* <Link
-                href="/about"
+              <Link
+                href="/userNiche"
                 className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
               >
-                About
-              </Link> */}
+                Improve
+              </Link>
             </div>
             {/* <button className="hidden sm:block bg-bg-primary hover:bg-bg-secondary text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">
               Feedback
@@ -59,19 +62,26 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 mt-2 mx-4 bg-bg-background/95 backdrop-blur-md border border-bg-border rounded-2xl shadow-lg py-4 px-6 flex flex-col gap-3">
           <Link
+            href="/"
+            className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors py-2"
+            onClick={() => setMobileOpen(false)}
+          >
+            Home
+          </Link>
+          <Link
             href="/roster"
             className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors py-2"
             onClick={() => setMobileOpen(false)}
           >
-            Product 
+            Roaster
           </Link>
-          {/* <Link
-            href="/about"
+          <Link
+            href="/userNiche"
             className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors py-2"
             onClick={() => setMobileOpen(false)}
           >
-            About
-          </Link> */}
+            Improve
+          </Link>
           {/* <button className="bg-bg-primary hover:bg-bg-secondary text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm w-full">
             Feedback
           </button> */}

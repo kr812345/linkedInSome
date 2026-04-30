@@ -1,71 +1,120 @@
-# LINKROAST
+# ⚡ LINKROAST
 
-### THE PROFESSIONAL PROFILE ANALYZER
+> **Intelligent LinkedIn Optimization Platform**
 
-LinkRoast is a high-performance profile optimization engine. It utilizes advanced LLM orchestration to provide critical analysis and strategic refinement for LinkedIn identities. Developed with a focus on technical luxury and uncompromising feedback.
-
----
-
-## CORE ENGINE
-
-The platform operates on a dual-feedback architecture designed to maximize professional conversion.
-
-### 01. CRITICAL ANALYSIS (THE ROAST)
-Identifies superficiality, generic positioning, and structural weaknesses in professional narratives. The system analyzes headlines, summaries, and experience blocks to expose areas of low impact.
-
-### 02. STRATEGIC REFINEMENT (THE REFINE)
-Reconstructs professional identities using high-impact terminology and ATS-optimized structures. It generates alternative narratives that prioritize clarity, authority, and industry relevance.
+LinkRoast is a high-performance optimization engine designed to elevate your professional presence. Powered by direct AI integrations, it provides deep critical analysis and strategic refinements to transform standard LinkedIn profiles into high-converting, standout professional identities. Built with a focus on precision, actionable feedback, and a premium "technical luxury" experience.
 
 ---
 
-## TECHNICAL ARCHITECTURE
+## ✨ Core Features
 
-Custom-built for speed and precision.
+- **🔥 The Roast (Critical Analysis):** Upload a screenshot of your profile and get a ruthless analysis. Identifies superficial language, generic positioning, and structural weaknesses.
+- **✨ The Refine (Strategic Enhancement):** Upload your resume and specific career goals. Reconstructs your identity using high-impact, ATS-optimized terminology.
+- **🖼️ Before & After:** Visual comparison of profile transformations to demonstrate immediate value.
+- **📋 Smart Copy:** One-click copy for all generated headlines, bios, and posts with instant clipboard feedback.
+- **💎 Premium Aesthetic:** A meticulously crafted dark-mode interface with glassmorphic depth, synchronized GSAP motion, and precision typography.
 
-| COMPONENT | TECHNOLOGY |
+---
+
+## 🛠️ Technical Architecture
+
+Custom-built for speed and precision, using a decoupled Next.js frontend and Express API architecture.
+
+| Layer | Technology |
 | :--- | :--- |
-| **Framework** | Next.js 15 (App Router) |
-| **Orchestration** | LangChain / LangGraph |
-| **Intelligence** | Google Gemini 1.5 Pro |
-| **Motion** | GSAP / Framer Motion |
-| **Database** | MongoDB / Redis |
-| **Assets** | Cloudinary |
-| **Interface** | Tailwind CSS / Lucide |
+| **Frontend** | Next.js 15 (App Router), React 19 |
+| **Backend API** | Express.js (Node.js) |
+| **Database/Cache** | Redis (Upstash) - High-speed caching |
+| **Asset Storage** | Cloudinary - Secure image processing |
+| **Styling & UI** | Tailwind CSS, Lucide Icons, Glassmorphism |
+| **Animation & Motion** | GSAP, Framer Motion |
+| **AI Intelligence** | Google Gemini 2.0 Flash (Vision), OpenAI |
+| **File Processing** | Multer, Sharp (Image Optimization), UnPDF |
 
 ---
 
-## DEVELOPMENT
+## 🚀 Getting Started
 
-### ENVIRONMENT SETUP
+Follow these steps to set up and run the LinkRoast application locally.
 
-1.  **Initialize dependencies**:
-    ```bash
-    pnpm install
-    ```
+### Prerequisites
 
-2.  **Configure vectors**:
-    Establish a `.env` file with the following required variables:
-    - `GEMINI_API_KEY`
-    - `MONGODB_URI`
-    - `CLOUDINARY_URL`
-    - `REDIS_URL`
+Ensure you have the following installed on your machine:
+- [Node.js](https://nodejs.org/en/) (v18 or higher)
+- [pnpm](https://pnpm.io/) (Package manager)
+- [Redis](https://redis.io/) (Local or Cloud instance)
 
-3.  **Launch execution loop**:
-    ```bash
-    pnpm run dev
-    ```
+### Installation
+
+1. **Clone the repository and install dependencies:**
+   ```bash
+   pnpm install
+   ```
+
+2. **Configure Environment Variables:**
+   Create a `.env.prod` (for backend) and `.env.local` (for frontend) with the following:
+   
+   ```env
+   # Server Configuration
+   PORT=5000
+   CORS_ORIGIN=http://localhost:3000
+   REDIS_URL=rediss://default:your_password@your_endpoint.upstash.io:6379
+   
+   # Cloudinary (Asset Storage)
+   CLOUDINARY_URL=your_cloudinary_url
+   
+   # AI Provider Keys
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
+
+3. **Launch the Development Servers:**
+   ```bash
+   pnpm run dev
+   ```
 
 ---
 
-## DESIGN PHILOSOPHY
+## 🚀 Deployment Strategy
 
-LinkRoast adheres to a minimalist, technical aesthetic. No distractions. No filler. Just high-precision data and actionable insights.
+For production, we use a **Multi-Cloud Hybrid** approach to ensure high performance and bypass AI generation timeouts.
 
-- **Technical Luxury**: A dark-mode primary interface with glassmorphic depth and subtle gradients.
-- **Synchronized Motion**: GSAP-driven entrance sequences and fluid state transitions.
-- **Precision Typography**: Utilizing modern sans-serif fonts optimized for technical legibility.
+*   **Frontend (Vercel):** Optimized for Next.js hosting, Edge functions, and SEO.
+*   **Backend (Railway):** Used for the Express API to handle long-running Gemini AI requests (15s+) without the strict 10s timeout limits of Vercel Hobby.
+*   **Redis (Upstash):** Serverless Redis for global, low-latency caching of AI responses.
 
 ---
 
-DEVELOPED BY KRISHNA YADAV
-© 2026 LINKROAST. ALL RIGHTS RESERVED.
+## 📡 API Reference
+
+The backend exposes a REST API powered by Express.js.
+
+### 1. The Roast Endpoint
+Analyzes a LinkedIn profile screenshot using Gemini Vision.
+
+- **Endpoint:** `POST /v1/api/roast`
+- **Payload:** `file` (Image)
+- **Response:** Structured JSON containing roast feedback.
+
+### 2. The Refine Endpoint
+Improves a professional profile using a resume PDF and goals.
+
+- **Endpoint:** `POST /v1/api/improve`
+- **Payload:** `resume` (PDF), `goal` (String)
+- **Response:** ATS-optimized Headlines, Bios, and Featured Posts.
+
+---
+
+## 🎨 Design Philosophy
+
+LinkRoast adheres to a minimalist, technical aesthetic.
+
+- **Technical Luxury:** A dark-mode primary interface with glassmorphic depth.
+- **Synchronized Motion:** GSAP-driven entrance sequences.
+- **Precision Typography:** Modern sans-serif fonts optimized for technical legibility.
+
+---
+
+<div align="center">
+  <p><b>DEVELOPED BY KRISHNA YADAV</b></p>
+  <p>© 2026 LINKROAST. ALL RIGHTS RESERVED.</p>
+</div>

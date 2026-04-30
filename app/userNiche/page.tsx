@@ -42,8 +42,7 @@ const userNichePage = () => {
 
   const models = [
     { idx: 0, option: "select model" },
-    { idx: 1, option: "groq" },
-    { idx: 2, option: "gemini 2.5 flash" },
+    { idx: 1, option: "gemini 2.0 flash" },
   ];
 
   const handleFormData = async (
@@ -109,16 +108,19 @@ const userNichePage = () => {
       });
 
       setIsLoading(false);
-      if (!response.ok) {
-        toast(
-          `Status: ${response.status}, Please Try again, There is some Issue`,
-        );
-      }
       const resData = await response.json();
-      console.log("This is the form response, we get: ", resData);
 
-      setData({ ...JSON.parse(resData.data) });
-      router.push("/improve");
+      if (!response.ok) {
+        toast.error(resData.error || `Error ${response.status}: Failed to get improvement`);
+        return;
+      }
+      
+      console.log("Improvement Response:", resData);
+
+      if (resData.data) {
+        setData(resData.data);
+        router.push("/improve");
+      }
     }
   };
 

@@ -25,6 +25,10 @@ const RosterPage = () => {
       return;
     }
 
+    if (!selectedFile.type.startsWith('image/')) {
+      return toast.error("Please upload an image file (PNG, JPG, etc.)");
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       setImage(event.target?.result as string);
@@ -39,6 +43,10 @@ const RosterPage = () => {
 
     if (filedrop == null) {
       return;
+    }
+
+    if (!filedrop.type.startsWith('image/')) {
+      return toast.error("Please drop an image file.");
     }
 
     setFile(filedrop);
@@ -124,11 +132,11 @@ const RosterPage = () => {
             LinkedIn Profile Reviewer
           </h1>
           <p className="mb-6 text-gray-400 text-sm sm:text-base max-w-xl">
-            Upload your LinkedIn Profile Screenshot to get the feedback.
+            Upload your LinkedIn Profile Screenshot to get the Roasted Feedback.
           </p>
         </div>
 
-        <div className="relative w-full max-w-4xl flex flex-col items-center justify-center m-auto z-10 gap-8">
+        <div className={`relative w-full ${image ? 'max-w-7xl lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start' : 'max-w-4xl flex flex-col'} items-center justify-center m-auto z-10 gap-8 transition-all duration-500`}>
           {/* Main Area */}
           <div className="flex flex-col items-center justify-center w-full">
             {image && (
@@ -137,7 +145,7 @@ const RosterPage = () => {
                   <img
                     src={image}
                     alt="Uploaded"
-                    className="max-w-full mx-auto h-60 sm:h-80 lg:h-120 z-0 rounded-lg object-contain shadow-2xl border border-white/10"
+                    className="max-w-full mx-auto h-auto max-h-[70vh] z-0 rounded-lg object-contain shadow-2xl border border-white/10"
                   />
                   <div className="absolute -right-10 top-0 hover:cursor-pointer text-white p-2">
                     <RiCloseLargeLine className="size-6" onClick={handleClose} />
@@ -171,7 +179,7 @@ const RosterPage = () => {
                       type="file"
                       onChange={handleImageUpload}
                       className="hidden"
-                      accept={file ? `image/${file?.name.split(".")[1]}` : ""}
+                      accept="image/*"
                     />
                   </label>
                 </div>
@@ -180,8 +188,8 @@ const RosterPage = () => {
           </div>
 
           {/* Right Side */}
-          <div ref={roastRef} className="w-full">
-            {isLoading ? <Loader /> : <RosterOutput data={data} error={error} />}
+          <div ref={roastRef} className="w-full lg:sticky lg:top-32">
+            {isLoading ? <div className="h-60 flex items-center justify-center"><Loader /></div> : <RosterOutput data={data} error={error} />}
           </div>
         </div>
 

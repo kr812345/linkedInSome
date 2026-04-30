@@ -59,17 +59,18 @@ app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-const server = app.listen(port, "0.0.0.0", () => {
-  console.log(`\n\n ''' \n\n Server is running at: http://0.0.0.0:${port} \n\n ''' \n\n`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`\n\n ''' \n\n Server is running at: http://0.0.0.0:${port} \n\n ''' \n\n`);
+  });
+}
+
+export default app;
 
 // Graceful Shutdown Logic
 const shutdown = () => {
   console.log('Shutdown signal received: closing HTTP server');
-  server.close(() => {
-    console.log('HTTP server closed');
-    process.exit(0);
-  });
+  process.exit(0);
 };
 
 process.on('SIGTERM', shutdown);

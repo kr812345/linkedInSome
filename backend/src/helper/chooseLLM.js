@@ -4,11 +4,13 @@ import askGroq from '../service/service.groq.js';
 
 export default async function feedToLLM({systemPrompt, userData, llm, inputImage}) {
     console.log("feedToLLM's userData: ", userData);
-    if (llm == 'openai') {
-        return await askOpenAi(systemPrompt, userData, inputImage);
-    } else if (llm == 'gemini') {
+    // if (llm == 'openai') {
+    //     return await askOpenAi(systemPrompt, userData, inputImage);
+    // } else 
+    if (llm.includes('gemini')) {
         return await askGemini(systemPrompt, userData, inputImage);
-    } else if (llm == 'groq') {
-        return await askGroq(systemPrompt, userData, inputImage);
-    }
+    } 
+    // else if (llm == 'groq') {
+    //     return await askGroq(systemPrompt, userData, inputImage);
+    // }
 }
