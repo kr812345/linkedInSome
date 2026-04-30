@@ -5,7 +5,6 @@
   ],
   "functions": {
     "server.js": {
-      "runtime": "@vercel/node",
       "maxDuration": 60
     }
   }
