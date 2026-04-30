@@ -1,26 +1,25 @@
 "use client";
-import react from "react";
+import React from "react";
 import Section from "@/components/Section";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
 import { useLLMResponseStore } from "../Store/store.llmResponse";
 import Loader from "@/components/Loader";
 import Link from "next/link";
-import Improve from "../Improve/page";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const userNichePage = () => {
   const router = useRouter();
   const { data, setData } = useLLMResponseStore();
-  const [formData_, setFormData_] = react.useState<{
+  const [formData_, setFormData_] = React.useState<{
     goal?: string;
     resume?: File;
     model?: string;
   }>({});
-  const [isDisabled, setIsDisabled] = react.useState<boolean | null>(true);
-  const [isLoading, setIsLoading] = react.useState<boolean | null>(false);
-  const [error, setError] = react.useState<string | null>(null);
+  const [isDisabled, setIsDisabled] = React.useState<boolean | null>(true);
+  const [isLoading, setIsLoading] = React.useState<boolean | null>(false);
+  const [error, setError] = React.useState<string | null>(null);
 
   const formLabels = [
     {
@@ -47,7 +46,7 @@ const userNichePage = () => {
 
   const handleFormData = async (
     name: string,
-    event: react.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     let value: string | File | undefined;
 
@@ -82,12 +81,12 @@ const userNichePage = () => {
     // }
   };
   
-  react.useEffect(()=>{
+  React.useEffect(()=>{
     console.log(formData_);
     setIsDisabled(!(formData_['goal'] && formData_['resume'] && formData_['model']));
   },[formData_])
 
-  const handleFormSubmit = async (event: react.MouseEvent) => {
+  const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (isDisabled) {
       toast('Please fill all details');
@@ -124,7 +123,7 @@ const userNichePage = () => {
     }
   };
 
-  // react.useEffect(()=>{
+  // React.useEffect(()=>{
 
   //     if (!data.message) {
   //         return (
