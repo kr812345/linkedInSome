@@ -16,12 +16,11 @@ COPY backend/ ./backend/
 # Move into the backend directory for execution
 WORKDIR /app/backend
 
+# Ensure the uploads directory exists
+RUN mkdir -p uploads
+
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=5000
-
-# Expose backend port
-EXPOSE 5000
 
 # Start the backend server
-CMD ["node", "api/index.js"]
+CMD ["node", "server.js"]
