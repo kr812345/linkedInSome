@@ -8,7 +8,7 @@ WORKDIR /app
 COPY backend/package.json ./backend/
 
 # Install backend dependencies using npm
-RUN cd backend && npm install --production
+RUN cd backend && npm install --production --legacy-peer-deps
 
 # Now copy the rest of the backend files
 COPY backend/ ./backend/
