@@ -1,26 +1,24 @@
-# Use a slim Node.js image for faster builds
+# Use a slim Node.js image
 FROM node:20-slim
 
-# Set working directory to root first
+# Set working directory to /app
 WORKDIR /app
 
-# Copy only the backend package.json to install dependencies first (caching)
-COPY backend/package.json ./backend/
-
-# Install backend dependencies using npm
-RUN cd backend && npm install --production --legacy-peer-deps
-
-# Now copy the rest of the backend files
+# Copy the entire backend folder to /app/backend
 COPY backend/ ./backend/
 
-# Move into the backend directory for execution
+# Move into the backend directory
 WORKDIR /app/backend
 
-# Ensure the uploads directory exists
+# Install dependencies inside the backend folder
+# We use --legacy-peer-deps to handle the cloudinary version conflict
+RUN npm install --production --legacy-peer-deps
+
+# Create the uploads folder to avoid errors
 RUN mkdir -p uploads
 
-# Set environment variables
+# Set production environment
 ENV NODE_ENV=production
 
-# Start the backend server
+# Start the server using an absolute-like path reference
 CMD ["node", "server.js"]
