@@ -1,24 +1,24 @@
-# Use a slim Node.js image
+# Use Node.js 20 slim image
 FROM node:20-slim
 
 # Set working directory to /app
 WORKDIR /app
 
-# Copy the entire backend folder to /app/backend
-COPY backend/ ./backend/
+# Copy EVERYTHING (respecting .dockerignore)
+# .dockerignore already excludes 'app/', 'node_modules', etc.
+COPY . .
 
-# Move into the backend directory
+# Move into the backend directory where server.js and package.json live
 WORKDIR /app/backend
 
-# Install dependencies inside the backend folder
-# We use --legacy-peer-deps to handle the cloudinary version conflict
+# Install dependencies
 RUN npm install --production --legacy-peer-deps
 
-# Create the uploads folder to avoid errors
+# Create uploads folder
 RUN mkdir -p uploads
 
 # Set production environment
 ENV NODE_ENV=production
 
-# Start the server using an absolute-like path reference
+# The file is definitely in /app/backend/server.js now
 CMD ["node", "server.js"]
