@@ -1,9 +1,21 @@
 import sharp from 'sharp';
 import path from 'path';
+import fs from 'fs';
+
+// Helper to find font path robustly (works in both dev and prod)
+const getFontPath = (relativePath) => {
+    // Check in current directory (typical for local dev run from root)
+    let fullPath = path.resolve(process.cwd(), relativePath);
+    if (fs.existsSync(fullPath)) return fullPath;
+    
+    // Check in parent directory (typical for Docker where cwd is /app/backend)
+    fullPath = path.resolve(process.cwd(), '..', relativePath);
+    return fullPath;
+};
 
 // Register Fonts
-const regularFontPath = path.resolve(process.cwd(), 'public/FONTS/Inter/static/Inter_28pt-Regular.ttf');
-const boldFontPath = path.resolve(process.cwd(), 'public/FONTS/Inter/static/Inter_28pt-Bold.ttf');
+const regularFontPath = getFontPath('public/FONTS/Inter/static/Inter_28pt-Regular.ttf');
+const boldFontPath = getFontPath('public/FONTS/Inter/static/Inter_28pt-Bold.ttf');
 
 /**
  * Wraps text into lines for SVG.

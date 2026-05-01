@@ -8,6 +8,11 @@ WORKDIR /app
 # .dockerignore already excludes 'app/', 'node_modules', etc.
 COPY . .
 
+# Install font rendering dependencies
+RUN apt-get update && apt-get install -y \
+    libfontconfig1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Move into the backend directory where server.js and package.json live
 WORKDIR /app/backend
 
