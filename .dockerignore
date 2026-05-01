@@ -4,7 +4,7 @@ node_modules
 .vercel
 app
 components
-public
+# public (Removed to allow fonts in share feature)
 lib
 types
 DOCs
