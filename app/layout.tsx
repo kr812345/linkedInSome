@@ -8,16 +8,17 @@ import { Analytics } from "@vercel/analytics/next"
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "LinkRoast | Roast & Refine Your LinkedIn Profile",
-  description: "Get roasted by AI. LinkRoast analyzes your LinkedIn profile to provide brutal feedback and professional suggestions to stand out.",
-  keywords: ["LinkedIn Roast", "AI Profile Reviewer", "Profile Optimization", "Career Advice", "LinkedIn Tips"],
+  metadataBase: new URL("https://linkroast.vercel.app"),
+  title: "LinkRoast | Is Your LinkedIn Bringing You Clients?",
+  description: "A free roast for founders. Upload your LinkedIn profile or recent posts and see whether your content would actually attract clients.",
+  keywords: ["LinkedIn roast", "founder LinkedIn", "LinkedIn content", "client attraction", "LinkedIn posts roast", "Founder Content Engine"],
   icons: {
     icon: "/linkRoast_logo.svg",
     apple: "/linkRoast_logo.svg",
   },
   openGraph: {
-    title: "LinkRoast | AI LinkedIn Profile Analyzer",
-    description: "Honest feedback to fix what's weak and highlight what works on your LinkedIn.",
+    title: "LinkRoast | Is Your LinkedIn Bringing You Clients?",
+    description: "Free AI roast for founders. Score your profile or recent posts, then unlock the rewrites.",
     url: "https://linkroast.vercel.app",
     siteName: "LinkRoast",
     images: [
@@ -32,8 +33,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "LinkRoast | Roast Your LinkedIn Profile",
-    description: "The AI-powered profile reviewer that gives you honest feedback.",
+    title: "LinkRoast | Is Your LinkedIn Bringing You Clients?",
+    description: "A free roast of your LinkedIn profile or posts — scored on whether it would attract clients.",
     images: ["/linkRoast_logo.svg"],
   },
 };

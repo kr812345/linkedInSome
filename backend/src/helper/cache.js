@@ -13,6 +13,7 @@ export const generateHash = (data) => {
  */
 export const getCache = async (key) => {
     try {
+        if (!redisClient?.isReady) return null;
         const data = await redisClient.get(key);
         return data ? JSON.parse(data) : null;
     } catch (err) {
@@ -26,6 +27,7 @@ export const getCache = async (key) => {
  */
 export const setCache = async (key, value, expiry = 3600) => {
     try {
+        if (!redisClient?.isReady) return;
         await redisClient.set(key, JSON.stringify(value), {
             EX: expiry
         });

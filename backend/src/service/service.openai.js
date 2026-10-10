@@ -1,11 +1,18 @@
 import rosterPrompt from "../public/prompts/rosterPrompt.js";
 import OpenAI from "openai";
 
-const client = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
+let client;
+
+function getClient() {
+    if (!client) {
+        client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    }
+    return client;
+}
 
 const askOpenAi = async (inputImage) => {
 
-    const response = await client.responses.create({
+    const response = await getClient().responses.create({
         model: "gpt-5-nano",
         // reasoning: "",
         // tools: "web_search",

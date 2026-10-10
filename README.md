@@ -1,15 +1,18 @@
 # ⚡ LINKROAST
 
-> **Intelligent LinkedIn Optimization Platform**
+> **Is your LinkedIn bringing you clients?**
 
-LinkRoast is a high-performance optimization engine designed to elevate your professional presence. Powered by direct AI integrations, it provides deep critical analysis and strategic refinements to transform standard LinkedIn profiles into high-converting, standout professional identities. Built with a focus on precision, actionable feedback, and a premium "technical luxury" experience.
+LinkRoast is a free, no-login roast for founders and business owners. Upload a LinkedIn profile screenshot, or up to five recent posts, and Gemini scores whether the content would attract clients. A short teaser is free. Name and email unlock the full roast and the rewrites. The last block on every roast offers a call for a free sample post (Founder Content Engine). No price is shown on the site.
 
 ---
 
 ## ✨ Core Features
 
-- **🔥 The Roast (Critical Analysis):** Upload a screenshot of your profile and get a ruthless analysis. Identifies superficial language, generic positioning, and structural weaknesses.
-- **✨ The Refine (Strategic Enhancement):** Upload your resume and specific career goals. Reconstructs your identity using high-impact, ATS-optimized terminology.
+- **🔥 Profile roast:** Upload a profile screenshot. Score plus notes on headline, about, proof, and whether a buyer would book.
+- **📝 Posts roast:** Upload up to five post screenshots and/or paste the text. Scored on hook, who you help, clarity, consistency, proof, CTA, and client attraction, with paste-ready rewrites.
+- **✉️ Email gate:** The response shows the score and the top two notes. Name, email, and a consent line unlock the rest. No account.
+- **📅 Call offer:** Every full roast ends with a booking link for a free sample post.
+- **✨ The Refine step:** Upload a resume and who you want as clients. Still available at `/userNiche`.
 - **🖼️ Before & After:** Visual comparison of profile transformations to demonstrate immediate value.
 - **📋 Smart Copy:** One-click copy for all generated headlines, bios, and posts with instant clipboard feedback.
 - **💎 Premium Aesthetic:** A meticulously crafted dark-mode interface with glassmorphic depth, synchronized GSAP motion, and precision typography.
@@ -52,20 +55,48 @@ Ensure you have the following installed on your machine:
    ```
 
 2. **Configure Environment Variables:**
-   Create a `.env.prod` (for backend) and `.env.local` (for frontend) with the following:
-   
+   Create a `.env` or `.env.prod` for the Express API (loaded from the repo root) and `.env.local` for the Next.js app.
+
    ```env
-   # Server Configuration
+   # Server
    PORT=5000
    CORS_ORIGIN=http://localhost:3000
    REDIS_URL=rediss://default:your_password@your_endpoint.upstash.io:6379
-   
-   # Cloudinary (Asset Storage)
-   CLOUDINARY_URL=your_cloudinary_url
-   
-   # AI Provider Keys
+
+   # AI
    GEMINI_API_KEY=your_gemini_api_key_here
+
+   # Optional. When set, new roast leads are also POSTed here (existing Make.com hook).
+   WEBHOOK_URL=
+
+   # Optional. Defaults to backend/data/leads.jsonl (gitignored).
+   LEADS_FILE=
+
+   # Local testing only. Serves a fixed roast and skips Gemini. Never set this in production.
+   MOCK_LLM=false
    ```
+
+   ```env
+   # .env.local (Next.js — exposed to the browser)
+   NEXT_PUBLIC_SERVER_URL=http://localhost:5000
+
+   # Where "Book a call" goes. Any https booking link.
+   # If unset, the button opens mailto:krishnay812345@gmail.com
+   # with the subject "Free sample post — Founder Content Engine".
+   NEXT_PUBLIC_BOOKING_URL=
+   ```
+
+   `NEXT_PUBLIC_*` values are inlined at build time. Set them in the Vercel project before building the frontend.
+
+### Leads
+
+Unlocking a roast stores `{ name, email, consent, mode, score, roastId, createdAt }`. The roast text itself is not stored on the lead.
+
+- **File:** `backend/data/leads.jsonl` (one JSON object per line). This is the durable log on a long-running host such as Railway. Override the path with `LEADS_FILE`.
+- **Redis:** the same record is appended to the list `leads:unlock` when `REDIS_URL` connects. Read it with `LRANGE leads:unlock 0 -1`.
+- **Webhook:** if `WEBHOOK_URL` is set, the lead is also POSTed there. A webhook failure does not block the unlock.
+
+The full roast is cached in memory and, when Redis is up, at `roast:session:<id>` for 30 minutes so the email gate can reveal it. Screenshots are deleted as soon as the request finishes.
 
 3. **Launch the Development Servers:**
    ```bash
@@ -88,19 +119,32 @@ For production, we use a **Multi-Cloud Hybrid** approach to ensure high performa
 
 The backend exposes a REST API powered by Express.js.
 
-### 1. The Roast Endpoint
-Analyzes a LinkedIn profile screenshot using Gemini Vision.
-
+### 1. Profile roast
 - **Endpoint:** `POST /v1/api/roast`
-- **Payload:** `file` (Image)
-- **Response:** Structured JSON containing roast feedback.
+- **Payload:** `file` (one image)
+- **Response:** `{ roastId, mode: "profile", teaser: { score, verdict, highlights, lockedCount } }`
+- The full roast is not in this response.
 
-### 2. The Refine Endpoint
-Improves a professional profile using a resume PDF and goals.
+### 2. Posts roast
+- **Endpoint:** `POST /v1/api/roast-posts`
+- **Payload:** `files` (up to 5 images) and/or `postsText`
+- **Response:** same teaser shape, `mode: "posts"`
 
+### 3. Unlock
+- **Endpoint:** `POST /v1/api/unlock`
+- **JSON body:** `{ roastId, name, email, consent: true }`
+- **Response:** the full roast (`sections`, `rewrites`, score, highlights) and a stored lead.
+
+### 4. The refine endpoint
 - **Endpoint:** `POST /v1/api/improve`
-- **Payload:** `resume` (PDF), `goal` (String)
-- **Response:** ATS-optimized Headlines, Bios, and Featured Posts.
+- **Payload:** `resume` (PDF), `goal` (string), `model`
+- **Response:** headline, about, and post drafts. This path is not email-gated.
+
+Run the gate tests without a Gemini key:
+
+```bash
+pnpm test:roast
+```
 
 ---
 

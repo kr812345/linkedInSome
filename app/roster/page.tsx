@@ -1,205 +1,329 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
-import { RiCloseLargeLine } from "react-icons/ri";
-import Loader from "@/components/Loader";
+
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { toast } from "sonner";
-import Link from "next/link";
-import { llmResponse } from "@/types/llmResponse";
-import RosterOutput from "@/components/RosterOutput";
+import { RiCloseLargeLine } from "react-icons/ri";
+import Loader from "@/components/Loader";
 import Section from "@/components/Section";
+import EmailGate from "@/components/EmailGate";
+import RoastResult from "@/components/RoastResult";
+import { RoastFull, RoastMode, RoastStartResponse, RoastTeaser } from "@/types/roast";
+
+type Preview = { file: File; url: string };
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
 const RosterPage = () => {
-  const [image, setImage] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const [data, setData] = useState<llmResponse | null>(null);
-  const [isDisable, setIsDisable] = useState<boolean>(false);
+  const [mode, setMode] = useState<RoastMode>("profile");
+  const [previews, setPreviews] = useState<Preview[]>([]);
+  const [postsText, setPostsText] = useState("");
+  const [teaser, setTeaser] = useState<RoastTeaser | null>(null);
+  const [roastId, setRoastId] = useState<string | null>(null);
+  const [roast, setRoast] = useState<RoastFull | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUnlocking, setIsUnlocking] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean | null>(false);
-  const roastRef = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("mode");
+    if (requested === "posts" || requested === "profile") {
+      setMode(requested);
+    }
+  }, []);
 
-    if (selectedFile == null) {
+  const clearResult = () => {
+    setTeaser(null);
+    setRoastId(null);
+    setRoast(null);
+    setError(null);
+  };
+
+  const switchMode = (next: RoastMode) => {
+    if (next === mode) return;
+    previews.forEach((preview) => URL.revokeObjectURL(preview.url));
+    setPreviews([]);
+    setPostsText("");
+    clearResult();
+    setMode(next);
+  };
+
+  const addFiles = (list: FileList | File[]) => {
+    const incoming = Array.from(list).filter((file) => file.type.startsWith("image/"));
+    if (incoming.length === 0) {
+      toast.error("Please upload an image file (PNG, JPG, etc.).");
       return;
     }
 
-    if (!selectedFile.type.startsWith('image/')) {
-      return toast.error("Please upload an image file (PNG, JPG, etc.)");
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImage(event.target?.result as string);
-      setFile(selectedFile);
-    };
-    reader.readAsDataURL(selectedFile);
+    const limit = mode === "profile" ? 1 : 5;
+    setPreviews((current) => {
+      const next = mode === "profile" ? [] : [...current];
+      if (mode === "profile") {
+        current.forEach((preview) => URL.revokeObjectURL(preview.url));
+      }
+      for (const file of incoming) {
+        if (next.length >= limit) break;
+        next.push({ file, url: URL.createObjectURL(file) });
+      }
+      if (mode === "posts" && current.length + incoming.length > limit) {
+        toast("Up to 5 post screenshots. Extra files were left out.");
+      }
+      return next;
+    });
+    clearResult();
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const filedrop = e.dataTransfer.files[0];
+  const removePreview = (url: string) => {
+    setPreviews((current) => {
+      const target = current.find((preview) => preview.url === url);
+      if (target) URL.revokeObjectURL(target.url);
+      return current.filter((preview) => preview.url !== url);
+    });
+    clearResult();
+  };
 
-    if (filedrop == null) {
+  const scrollToResult = () => {
+    requestAnimationFrame(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const handleRoast = async () => {
+    const hasImage = previews.length > 0;
+    const hasText = postsText.trim().length >= 20;
+
+    if (mode === "profile" && !hasImage) {
+      toast("Upload a profile screenshot first.");
+      return;
+    }
+    if (mode === "posts" && !hasImage && !hasText) {
+      toast("Add post screenshots or paste the post text.");
       return;
     }
 
-    if (!filedrop.type.startsWith('image/')) {
-      return toast.error("Please drop an image file.");
-    }
-
-    setFile(filedrop);
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImage(event.target?.result as string);
-    };
-    reader.readAsDataURL(e.dataTransfer.files[0]);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  useEffect(()=>{
-    console.log(file);
-  },[file])
-
-  const handleClose = () => {
-    setImage(null);
-    setFile(null);
-    setData(null);
-    setIsLoading(false);
-    setIsDisable(false);
-  };
-
-  const handleRoster = async () => {
-    if (isDisable) {
-      return toast("Bhai rujka, pehle cross pr maar.");
-    }
-    setIsDisable(true);
     setIsLoading(true);
     setError(null);
-    setData(null);
-    roastRef.current?.scrollIntoView({ behavior: "smooth" });
+    setRoast(null);
+    setTeaser(null);
+    scrollToResult();
 
-    if (file) {
-      try {
-        const filedata = new FormData();
-        filedata.append("file", file);
-        
-        const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
-        const response = await fetch(`${serverUrl}/v1/api/roast`, {
-          method: "POST",
-          body: filedata,
-        });
+    try {
+      const body = new FormData();
+      let endpoint = "/v1/api/roast";
 
-        const resJson = await response.json();
-
-        if (!response.ok) {
-           throw new Error(resJson.message || resJson.error || `Error ${response.status}: Failed to get roast`);
-        }
-
-        const resData = resJson?.data;
-
-        if (resData?.error) {
-           toast(resData.error);
-           setError(resData.error);
-        } else {
-           setData(resData);
-        }
-      } catch (err: any) {
-        console.error(err);
-        toast(err.message || "An unexpected error occurred");
-        setError(err.message || "An unexpected error occurred");
-      } finally {
-        setIsLoading(false);
-        setIsDisable(false);
+      if (mode === "profile") {
+        body.append("file", previews[0].file);
+      } else {
+        endpoint = "/v1/api/roast-posts";
+        previews.forEach((preview) => body.append("files", preview.file));
+        body.append("postsText", postsText);
       }
-    } else {
+
+      const response = await fetch(`${SERVER_URL}${endpoint}`, { method: "POST", body });
+      const payload = (await response.json()) as RoastStartResponse;
+
+      if (!response.ok || !payload.teaser || !payload.roastId) {
+        throw new Error(payload.message || "Could not roast that.");
+      }
+
+      setRoastId(payload.roastId);
+      setTeaser(payload.teaser);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Could not roast that.";
+      setError(message);
+      toast.error(message);
+    } finally {
       setIsLoading(false);
-      setIsDisable(false);
-      toast("Please upload an image first.");
     }
   };
+
+  const handleUnlock = async (name: string, email: string) => {
+    if (!roastId) return;
+    setIsUnlocking(true);
+    setError(null);
+    try {
+      const response = await fetch(`${SERVER_URL}/v1/api/unlock`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roastId, name, email, consent: true }),
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload.data) {
+        throw new Error(payload.message || "Could not unlock the roast.");
+      }
+      setRoast(payload.data as RoastFull);
+      setTeaser(null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Could not unlock the roast.";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setIsUnlocking(false);
+    }
+  };
+
+  const canSubmit = mode === "profile"
+    ? previews.length === 1
+    : previews.length > 0 || postsText.trim().length >= 20;
 
   return (
     <Section withSun={true} className="!p-0">
       <div className="min-h-screen w-full relative p-4 sm:p-8 pt-24 sm:pt-32 flex flex-col items-center gap-8 text-white">
-        <div className="flex flex-col items-center text-center relative z-10">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-white text-shadow-md text-shadow-[#ff2f00]">
-            LinkedIn Profile Reviewer
+        <div className="flex flex-col items-center text-center relative z-10 max-w-2xl">
+          <h1 className="text-3xl sm:text-5xl font-serif font-bold mb-3 text-white">
+            Is your LinkedIn bringing you clients?
           </h1>
-          <p className="mb-6 text-gray-400 text-sm sm:text-base max-w-xl">
-            Upload your LinkedIn Profile Screenshot to get the Roasted Feedback.
+          <p className="mb-6 text-gray-400 text-sm sm:text-base">
+            Roast the profile, or roast the posts. Same free pass, no login. You get a score and the sharpest notes first.
           </p>
+          <div data-testid="mode-picker" className="flex p-1 rounded-full border border-[#ff2f00]/50 bg-black/60" role="tablist" aria-label="Roast mode">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "profile"}
+              onClick={() => switchMode("profile")}
+              className={`rounded-full px-5 py-2 text-sm sm:text-base font-medium transition-colors ${mode === "profile" ? "bg-[#ff2f00] text-white" : "text-gray-300 hover:text-white"}`}
+            >
+              Profile roast
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "posts"}
+              onClick={() => switchMode("posts")}
+              className={`rounded-full px-5 py-2 text-sm sm:text-base font-medium transition-colors ${mode === "posts" ? "bg-[#ff2f00] text-white" : "text-gray-300 hover:text-white"}`}
+            >
+              Posts roast
+            </button>
+          </div>
         </div>
 
-        <div className={`relative w-full ${image ? 'max-w-7xl lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start' : 'max-w-4xl flex flex-col'} items-center justify-center m-auto z-10 gap-8 transition-all duration-500`}>
-          {/* Main Area */}
-          <div className="flex flex-col items-center justify-center w-full">
-            {image && (
-              <div className="relative mb-8 flex w-full flex-col items-center px-4">
-                <div className="relative group">
-                  <img
-                    src={image}
-                    alt="Uploaded"
-                    className="max-w-full mx-auto h-auto max-h-[70vh] z-0 rounded-lg object-contain shadow-2xl border border-white/10"
-                  />
-                  <div className="absolute -right-10 top-0 hover:cursor-pointer text-white p-2">
-                    <RiCloseLargeLine className="size-6" onClick={handleClose} />
+        <div className="relative z-10 w-full max-w-5xl grid gap-8 lg:grid-cols-2 lg:items-start">
+          <div className="flex flex-col items-center w-full">
+            {mode === "posts" && (
+              <p className="mb-4 text-sm text-gray-400 text-center max-w-md">
+                Upload screenshots of up to five recent posts, paste the text, or do both. We look at the hook, who you help, consistency, proof, the CTA, and whether a buyer would bite.
+              </p>
+            )}
+            {mode === "profile" && (
+              <p className="mb-4 text-sm text-gray-400 text-center max-w-md">
+                Upload one LinkedIn profile screenshot. We read the banner, headline, about, and whether a buyer would book.
+              </p>
+            )}
+
+            {previews.length > 0 && (
+              <div className={`mb-6 w-full ${mode === "posts" ? "grid grid-cols-2 gap-3" : "flex justify-center"}`}>
+                {previews.map((preview) => (
+                  <div key={preview.url} className="relative">
+                    <img
+                      src={preview.url}
+                      alt="Upload preview"
+                      className="max-h-64 w-full rounded-lg border border-white/10 object-contain bg-black/40"
+                    />
+                    <button
+                      type="button"
+                      aria-label="Remove image"
+                      onClick={() => removePreview(preview.url)}
+                      className="absolute -right-2 -top-2 rounded-full bg-black/80 p-1 border border-white/20"
+                    >
+                      <RiCloseLargeLine className="size-4" />
+                    </button>
                   </div>
-                </div>
-                <motion.button
-                  animate={{ scale: [1, 1.02, 1] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  onClick={handleRoster}
-                  type="button"
-                  disabled={isDisable}
-                  className={`mt-8 px-8 py-3 w-fit h-fit rounded-full bg-[#ff2f00] font-bold text-sm sm:text-base text-white ${isDisable ? "bg-[#ff2f0099]" : "hover:cursor-pointer hover:shadow-[0_0_20px_2px_#ff2f00]"}`}
-                >
-                  Feed it to Roster
-                </motion.button>
+                ))}
               </div>
             )}
-            
-            {!image && (
+
+            {(mode === "posts" || previews.length === 0) && previews.length < (mode === "profile" ? 1 : 5) && (
               <div
-                className="w-full max-w-lg border-2 border-dashed rounded-2xl flex items-center justify-center text-center p-12 transition-all border-[#ff2f00]/30 text-gray-400 bg-black/40 backdrop-blur-md hover:border-[#ff2f00]/60 hover:bg-black/50"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
+                className="w-full max-w-lg border-2 border-dashed rounded-2xl flex items-center justify-center text-center p-8 sm:p-12 transition-all border-[#ff2f00]/30 text-gray-400 bg-black/40 backdrop-blur-md hover:border-[#ff2f00]/60"
+                onDrop={(event) => {
+                  event.preventDefault();
+                  if (event.dataTransfer.files.length) addFiles(event.dataTransfer.files);
+                }}
+                onDragOver={(event) => event.preventDefault()}
               >
-                <div className="flex flex-col items-center gap-4">
-                  <p className="text-lg">Drag & drop an Image</p>
-                  <p className="text-sm opacity-50">or</p>
-                  <label className="cursor-pointer px-8 py-3 rounded-full transition-all bg-[#ff2f00] text-white font-semibold hover:bg-[#ff3f00] shadow-lg">
-                    Browse Files
+                <div className="flex flex-col items-center gap-3">
+                  <p className="text-lg text-white">
+                    {mode === "profile" ? "Drop a profile screenshot" : `Drop post screenshots (${previews.length}/5)`}
+                  </p>
+                  <p className="text-sm opacity-60">PNG or JPG</p>
+                  <label className="cursor-pointer px-8 py-3 rounded-full bg-[#ff2f00] text-white font-semibold hover:bg-[#ff3f00]">
+                    Browse files
                     <input
                       type="file"
-                      onChange={handleImageUpload}
-                      className="hidden"
                       accept="image/*"
+                      multiple={mode === "posts"}
+                      className="hidden"
+                      onChange={(event) => {
+                        if (event.target.files?.length) addFiles(event.target.files);
+                        event.target.value = "";
+                      }}
                     />
                   </label>
                 </div>
               </div>
             )}
+
+            {mode === "posts" && (
+              <label className="mt-6 w-full max-w-lg text-left text-sm">
+                <span className="text-gray-300">Or paste recent posts</span>
+                <textarea
+                  value={postsText}
+                  onChange={(event) => {
+                    setPostsText(event.target.value);
+                    clearResult();
+                  }}
+                  rows={8}
+                  placeholder={"Paste up to five posts. Leave a blank line between them.\n\nThe first line is the hook. The last line should be the ask."}
+                  className="mt-2 w-full rounded-xl border border-[#ff2f00]/40 bg-black/40 px-3 py-3 text-white outline-none focus:border-[#ff2f00]"
+                />
+              </label>
+            )}
+
+            {canSubmit && (
+              <motion.button
+                animate={{ scale: [1, 1.02, 1] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                type="button"
+                onClick={handleRoast}
+                disabled={isLoading}
+                className="mt-8 rounded-full bg-[#ff2f00] px-8 py-3 font-bold text-white disabled:opacity-60 hover:shadow-[0_0_20px_2px_#ff2f00]"
+              >
+                {isLoading ? "Roasting…" : mode === "posts" ? "Roast these posts" : "Roast this profile"}
+              </motion.button>
+            )}
           </div>
 
-          {/* Right Side */}
-          <div ref={roastRef} className="w-full lg:sticky lg:top-32">
-            {isLoading ? <div className="h-60 flex items-center justify-center"><Loader /></div> : <RosterOutput data={data} error={error} />}
+          <div ref={resultRef} className="w-full lg:sticky lg:top-28">
+            {isLoading && (
+              <div className="flex h-60 items-center justify-center">
+                <Loader />
+              </div>
+            )}
+            {!isLoading && teaser && (
+              <EmailGate
+                mode={mode}
+                teaser={teaser}
+                submitting={isUnlocking}
+                error={error}
+                onUnlock={handleUnlock}
+              />
+            )}
+            {!isLoading && roast && <RoastResult roast={roast} />}
+            {!isLoading && !teaser && !roast && error && (
+              <p className="rounded-xl border border-[#ff2f00]/40 p-4 text-sm text-[#ffb4a2]">{error}</p>
+            )}
           </div>
         </div>
 
-        {/* Improve Option */}
-        <div className="bottom-0 left-0 right-0 p-4 mt-4 sm:mt-8 flex justify-center z-10">
+        <div className="relative z-10 mt-4">
           <Link
             href="/userNiche"
-            className="inline-block border-2 border-[#ff2f00] hover:rounded-md px-6 py-2 bg-black/40 backdrop-blur-md text-white rounded-full text-sm sm:text-base hover:shadow-[0_0_10px_2px_#ff2f00] transition-all"
+            className="inline-block rounded-full border-2 border-[#ff2f00] bg-black/40 px-6 py-2 text-sm sm:text-base hover:shadow-[0_0_10px_2px_#ff2f00]"
           >
-            Improve your Profile
+            Rewrite the profile from a resume
           </Link>
         </div>
       </div>
