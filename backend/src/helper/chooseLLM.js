@@ -1,16 +1,9 @@
-import askOpenAi from '../service/service.openai.js';
 import askGemini from '../service/service.gemini.js';
-import askGroq from '../service/service.groq.js';
 
-export default async function feedToLLM({systemPrompt, userData, llm, inputImage}) {
+export default async function feedToLLM({ systemPrompt, userData, llm, inputImage, inputImages }) {
     console.log("feedToLLM's userData: ", userData);
-    // if (llm == 'openai') {
-    //     return await askOpenAi(systemPrompt, userData, inputImage);
-    // } else 
-    if (llm.includes('gemini')) {
-        return await askGemini(systemPrompt, userData, inputImage);
-    } 
-    // else if (llm == 'groq') {
-    //     return await askGroq(systemPrompt, userData, inputImage);
-    // }
+    if (typeof llm === 'string' && llm.includes('gemini')) {
+        return await askGemini(systemPrompt, userData, inputImage, inputImages);
+    }
+    throw new Error('Unsupported model');
 }

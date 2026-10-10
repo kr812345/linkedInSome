@@ -1,20 +1,11 @@
-import React, { useEffect } from 'react'
+'use client'
+import React from 'react'
 import Image from 'next/image'
 import { Play } from 'lucide-react';
-import { toast, Toaster } from 'sonner';
-import { redirect } from 'next/navigation';
-import WaitingList  from './waiting-list';
+import { useRouter } from 'next/navigation';
 
 const Hero = () => {
-
-  // useEffect(() => {
-  //   toast("Welcome to EasyLink!")
-  // }, [])
-
-  const handleGetRoasted = (e: React.FormEvent) => {
-    e.preventDefault()
-    redirect('/roster')
-  }
+  const router = useRouter();
 
   return (
     <>
@@ -34,12 +25,12 @@ const Hero = () => {
           <div className='flex flex-col lg:grid lg:grid-cols-2 pt-10 px-6 sm:px-10 not-lg:-mt-20 lg:pt-30 lg:pl-20 h-full text-white'>
             {/* Left Side */}
             <div className='h-full flex flex-col justify-center lg:-mt-20'>
-              <h1 className='text-4xl sm:text-5xl lg:text-7xl font-bold text-white font-serif'>Your LinkedIn Profile, Roasted & Refined.</h1>
-              <p className='text-gray-400 pt-4 text-sm sm:text-base'>The AI-powered profile reviewer that uses Gemini to give you honest feedback—and just enough heat—to fix what's weak, highlight what works, and help you stand out where it matters.</p>
-              <div className='flex gap-4 mt-8 sm:mt-10 flex flex-col items-start sm:flex-row'>
-                {/* <WaitingList/> */}
-                 <button onClick={(e) => handleGetRoasted(e)} className='border border-[#ff2f00ff] tracking-tight hover:shadow-[0_0_2px_2px_#ff2f00] bg-orange-700 font-medium rounded-full px-4 py-3 flex text-sm sm:text-base'>Get Roasted<Play className='size-4 sm:size-5 ml-1' /></button>
-                {/* <button onClick={(e) => handleGetRoasted(e)} className='border border-orange-600 tracking-tight rounded-full font-medium px-3 py-2 text-sm sm:text-base'>See Example</button> */}
+              <p className='text-[#ff2f00] text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase mb-3'>Free for founders</p>
+              <h1 data-testid="hero-headline" className='text-4xl sm:text-5xl lg:text-7xl font-bold text-white font-serif'>Is your LinkedIn bringing you clients?</h1>
+              <p className='text-gray-400 pt-4 text-sm sm:text-base'>Roast the profile or the last few posts. Gemini scores whether a buyer would stop, trust you, and book — then shows you the lines to rewrite. No login. No account.</p>
+              <div className='flex gap-4 mt-8 sm:mt-10 flex-col items-start sm:flex-row'>
+                 <button onClick={() => router.push('/roster?mode=profile')} className='border border-[#ff2f00ff] tracking-tight hover:shadow-[0_0_2px_2px_#ff2f00] bg-orange-700 font-medium rounded-full px-4 py-3 flex text-sm sm:text-base'>Roast my profile<Play className='size-4 sm:size-5 ml-1' /></button>
+                 <button onClick={() => router.push('/roster?mode=posts')} className='border border-[#ff2f00] tracking-tight hover:shadow-[0_0_2px_2px_#ff2f00] rounded-full font-medium px-4 py-3 text-sm sm:text-base'>Roast my posts</button>
               </div>
             </div>
 

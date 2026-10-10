@@ -24,7 +24,7 @@ const userNichePage = () => {
   const formLabels = [
     {
       h: "Goal",
-      sh: "What do you want to do ?",
+      sh: "Who should this profile bring in?",
       labelName: "goal",
       type: "text",
       accept: "text",
@@ -143,10 +143,10 @@ const userNichePage = () => {
           <div className="flex flex-col items-center w-full max-w-xl gap-8 relative z-10">
             <div className="flex flex-col items-center text-center">
               <h1 className="text-2xl sm:text-4xl font-bold mb-4 text-white text-shadow-md text-shadow-[#ff2f00]">
-                Refine Your Profile
+                Rewrite the profile around clients
               </h1>
               <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
-                Enter details to get your improved Linkedin Profile
+                Add a resume and who you want in the pipeline. You get a headline, about, and posts you can paste back.
               </p>
             </div>
             

@@ -2,6 +2,7 @@
 
 
 uploads/
+backend/data/
 /dev
 # dependencies
 /node_modules

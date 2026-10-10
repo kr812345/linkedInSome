@@ -13,7 +13,7 @@ Your job is to:
 3. Craft a LinkedIn profile that positions the user as a clear, valuable, and differentiated candidate
 
 Target:
-Help the user stand out, attract recruiters/founders/clients, and increase profile conversions by making their profile look intentional, premium, and outcome-driven.
+Help the user stand out to clients (and still read clearly if someone is hiring) by making the profile intentional, specific, and outcome-driven. Do not mention pricing.
 
 Instructions:
 - DO NOT summarize the resume

@@ -1,13 +1,15 @@
-import { redirect } from 'next/navigation'
+'use client'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const Section4 = () => {
+    const router = useRouter();
 
     const items = [
-        { i: "01", title: "Upload", desc: "Upload your LinkedIn Profile screenshot" },
-        { i: "02", title: "LLM", desc: "AI Reads & Understand your profile" },
-        { i: "03", title: "Roast", desc: "AI reads and give Roast on your profile" },
-        { i: "04", title: "Improve", desc: "Use the feedback and improve your linkedIn profile" }
+        { i: "01", title: "Upload", desc: "Drop a profile screenshot, or up to five recent posts — images, pasted text, or both." },
+        { i: "02", title: "Read", desc: "Gemini reads the layout and the words. You do not fill out a form." },
+        { i: "03", title: "Roast", desc: "A score, plus a roast on the hook, who you help, proof, and whether it would attract clients." },
+        { i: "04", title: "Rewrite", desc: "Unlock the full notes and paste-ready lines. Then book a call if you want the next 30 days written." }
     ]; 
     // remove this line and rewrite the comments, as you might not need 
 
@@ -17,9 +19,8 @@ const Section4 = () => {
                 {/* left */}
                 <div className='flex flex-col items-center lg:items-start text-center lg:text-left'>
                     <div>
-                        <h1 className='text-3xl sm:text-5xl lg:text-6xl font-bold text-shadow-[#ff2f00] text-shadow-md'>How It Works ?</h1>
-                        {/* <button onClick={() => (redirect('/roster'))} className='rounded-full px-3 py-2 mt-6 bg-[#ff2f00] shadow-[#ff2f00] drop-shadow-lg drop-shadow-y-[#ff2f00] shadow-md font-semibold'>Try to Roast me</button> */}
-                        <button onClick={() => (redirect('/roster'))} className='rounded-full px-3 py-2 mt-6 bg-[#ff2f00] shadow-[#ff2f00] drop-shadow-lg drop-shadow-y-[#ff2f00] shadow-md font-medium'>Let's See</button>
+                        <h1 className='text-3xl sm:text-5xl lg:text-6xl font-bold text-shadow-[#ff2f00] text-shadow-md'>How it works</h1>
+                        <button onClick={() => router.push('/roster')} className='rounded-full px-3 py-2 mt-6 bg-[#ff2f00] shadow-[#ff2f00] drop-shadow-lg drop-shadow-y-[#ff2f00] shadow-md font-medium'>Roast mine</button>
                     </div>
                 </div>
 
@@ -29,7 +30,7 @@ const Section4 = () => {
                         <div key={i.i}>
                             <h1 className='text-5xl sm:text-7xl lg:text-8xl text-[#7f7f7f] font-bold font-mono'>{i.i}</h1>
                             <h2 className='text-2xl sm:text-3xl lg:text-4xl text-[#e5e5e5] mt-4 font-bold'>{i.title}</h2>
-                            <p className='text-[#4d4d4d] mt-2 font-light'>{i.desc}</p>
+                            <p className='text-gray-400 mt-2 font-light'>{i.desc}</p>
                         </div>
                     ))}
                 </div>

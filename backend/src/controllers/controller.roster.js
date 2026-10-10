@@ -1,63 +1,81 @@
-// import { askLLM } from '../service/service.gemini.js';
-import uploadToCloud,{ deleteFromCloudinary } from '../service/service.cloudinary.js';
+import fs from 'fs';
 import feedToLLM from '../helper/chooseLLM.js';
-import startAutomation from '../service/service.email.js';
-import { extractTextFromPDF } from '../helper/extractTextFromPDF.js';
 import rosterPrompt from '../public/prompts/rosterPrompt.js';
-import improveProfilePrompt from '../public/prompts/improveProfilePrompt.js';
-import { profileSchema } from '../public/schemas/profileSchema.js';
-import { cleanLLMResponse } from '../helper/cleanLLMResponse.js';
-import { handleRetries } from '../helper/handleRetriesLLM.js';
+import { parseRoastJson, normalizeRoast, toTeaser } from '../helper/parseRoast.js';
+import { mockProfileRoast } from '../helper/mockRoast.js';
+import { putRoast } from '../helper/roastSession.js';
 import { cleanupUploads, deleteFile } from '../helper/cleanupUploads.js';
 import { generateHash, getCache, setCache } from '../helper/cache.js';
-import fs from 'fs';
+
+async function buildProfileRoast(file) {
+    if (process.env.MOCK_LLM === 'true') {
+        return normalizeRoast(mockProfileRoast(), 'profile');
+    }
+
+    const fileBuffer = fs.readFileSync(file.path);
+    const cacheKey = `roast:v2:profile:${generateHash(fileBuffer)}`;
+    const cached = await getCache(cacheKey);
+    if (cached && !cached.error) {
+        return normalizeRoast(cached, 'profile');
+    }
+
+    const llmOutput = await feedToLLM({
+        systemPrompt: rosterPrompt,
+        llm: 'gemini',
+        inputImage: file.path,
+    });
+
+    if (!llmOutput) {
+        const error = new Error('The roast model did not respond. Try again in a moment.');
+        error.status = 502;
+        throw error;
+    }
+
+    const roast = normalizeRoast(parseRoastJson(llmOutput), 'profile');
+    if (!roast.error) {
+        await setCache(cacheKey, roast);
+    }
+    return roast;
+}
 
 export const roster = async (req, res) => {
     try {
         const file = req.file;
 
-        if (!file) return res.status(404).json({message: "No File"});
-
-        // Cache Logic
-        const fileBuffer = fs.readFileSync(file.path);
-        const cacheKey = `roast:${generateHash(fileBuffer)}`;
-        const cachedData = await getCache(cacheKey);
-
-        if (cachedData) {
-            console.log(`[Redis Cache] Hit for ${cacheKey}`);
-            return res.status(200).json({success: true, message: "Roast Feedback Success (Cached)", data: cachedData});
+        if (!file) {
+            return res.status(400).json({ success: false, message: 'Upload a LinkedIn profile screenshot.' });
         }
 
-        // const llm = {gemini: true, openai: 0}
-        const llmOutput = await feedToLLM({systemPrompt: rosterPrompt, llm: 'gemini', inputImage: file.path});
-
-        console.log(llmOutput);
-        const cleanLLMOutput = llmOutput.replace('```json','').replace('```','');
-
-        if (cleanLLMOutput.error) {
-            return res.status(400).json({success: false, message: "Not a LinkedIn Image/Screenshot", error: cleanLLMOutput.error});
+        if (!file.mimetype?.startsWith('image/')) {
+            return res.status(400).json({ success: false, message: 'Please upload an image file.' });
         }
 
-        if (typeof cleanLLMOutput !== "object" && typeof cleanLLMOutput !== "string") {
-            return res.status(400).json({success: false, message: "Invalid LLM Output"});
-        }
-        if (typeof cleanLLMOutput === 'string') {
-            const finalOutput = JSON.parse(cleanLLMOutput);   
-            await setCache(cacheKey, finalOutput);
-            return res.status(200).json({success: true, message: "Roast Feedback Success", data: finalOutput});
+        const roast = await buildProfileRoast(file);
+
+        if (roast.error) {
+            return res.status(400).json({ success: false, message: roast.error });
         }
 
-        await setCache(cacheKey, cleanLLMOutput);
-        return res.status(200).json({success: true, message: "Roast Feedback Success", data: cleanLLMOutput});
+        const roastId = await putRoast(roast);
 
+        return res.status(200).json({
+            success: true,
+            gated: true,
+            roastId,
+            mode: 'profile',
+            teaser: toTeaser(roast),
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).json({success: false, message: "error in processing request"});
+        const status = err.status || 500;
+        res.status(status).json({
+            success: false,
+            message: status === 502 ? err.message : 'Could not process that screenshot.',
+        });
     } finally {
         if (req.file) {
             deleteFile(req.file.path);
         }
         cleanupUploads();
     }
-}
-
+};

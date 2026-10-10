@@ -7,7 +7,11 @@ const client = createClient({
     url: envConfig.redisUrl,
     socket: {
         tls: isTls,
-        rejectUnauthorized: false // Often needed for hosted Redis providers
+        rejectUnauthorized: false, // Often needed for hosted Redis providers
+        reconnectStrategy(retries) {
+            if (retries > 8) return new Error('Redis unavailable');
+            return Math.min(retries * 200, 2000);
+        },
     }
 });
 

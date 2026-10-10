@@ -37,12 +37,12 @@ const section2 = () => {
           transition={{ duration: 0.5 }}
           className='relative w-full max-w-3xl h-auto px-6 py-10 sm:py-14 flex flex-col items-center justify-center gap-4 border border-[#ff2f00] rounded-xl text-white'>
           <div className="flex flex-col gap-6 text-center">
-            <h2 className='text-xl sm:text-2xl font-bold tracking-tight'>Stop Settling for Generic.</h2>
+            <h2 className='text-xl sm:text-2xl font-bold tracking-tight'>Likes are not clients.</h2>
             <p className='text-sm sm:text-lg text-gray-300 font-medium leading-relaxed px-4'>
-              The world doesn't need another template-based profile. It needs your unique story, told with clarity and impact.
+              A polished profile that never names who you help will not fill a calendar. Founders do not need another template. They need a presence that starts conversations.
             </p>
             <p className='text-sm sm:text-lg font-bold text-[#ff2f00] italic px-2'>
-              Build a presence that commands respect and opens doors you didn't know existed.
+              If a buyer cannot tell what you do in five seconds, they will not become a client.
             </p>
           </div>
           <Image className='absolute translate-y-45 -z-1 not-sm:!translate-y-41 sm:block' src={'./shadow.svg'} width={1000} height={100} alt='______' />
@@ -51,18 +51,21 @@ const section2 = () => {
           <motion.div className='flex gap-8 '
             animate={controls}
           >
-            <span className='container-text mr-4 '>"Generic bio no one reads", </span>
-            <span className='container-text mr-4 '>"Buzzwords without impact", </span>
-            <span className='container-text mr-4 '>"Looks professional but says nothing", </span>
-            <span className='container-text mr-4 '>"Low profile views, no replies"</span>
-            <span className='container-text mr-4 '>"Generic bio no one reads", </span>
-            <span className='container-text mr-4 '>"Buzzwords without impact", </span>
-            <span className='container-text mr-4 '>"Looks professional but says nothing", </span>
-            <span className='container-text mr-4 '>"Low profile views, no replies"</span>
-            <span className='container-text mr-4 '>"Generic bio no one reads", </span>
-            <span className='container-text mr-4 '>"Buzzwords without impact", </span>
-            <span className='container-text mr-4 '>"Looks professional but says nothing", </span>
-            <span className='container-text mr-4 '>"Low profile views, no replies"</span>
+            <span className='container-text mr-4 '>&quot;Posts that get likes, not leads&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Nobody can tell who you help&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Busy profile, empty pipeline&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Hooks that die in the first line&quot;</span>
+            <span className='container-text mr-4 '>&quot;Proof missing. CTA missing.&quot;</span>
+            <span className='container-text mr-4 '>&quot;Posts that get likes, not leads&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Nobody can tell who you help&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Busy profile, empty pipeline&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Hooks that die in the first line&quot;</span>
+            <span className='container-text mr-4 '>&quot;Proof missing. CTA missing.&quot;</span>
+            <span className='container-text mr-4 '>&quot;Posts that get likes, not leads&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Nobody can tell who you help&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Busy profile, empty pipeline&quot;, </span>
+            <span className='container-text mr-4 '>&quot;Hooks that die in the first line&quot;</span>
+            <span className='container-text mr-4 '>&quot;Proof missing. CTA missing.&quot;</span>
           </motion.div>
         </div>
       </div>

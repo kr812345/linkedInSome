@@ -3,8 +3,6 @@ import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import './src/config/envConfig.js';
-import './src/service/service.gemini.js';
-import './src/service/service.openai.js';
 import linkRoastRouter from './src/routes/route.upload.js';
 
 const port = process.env.PORT || 5000;
@@ -18,7 +16,10 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
   'https://linkroast.vercel.app',
+  'https://linkroast.itskrishna.live',
   'https://linked-in-some-cbpa.vercel.app',
   process.env.CORS_ORIGIN
 ].filter(Boolean);

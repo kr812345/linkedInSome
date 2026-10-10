@@ -23,8 +23,11 @@ const Footer = () => {
                         <img src="/linkRoast_logo.svg" alt="LinkRoast Logo" className="h-6 w-6 object-contain" />
                         <h2 className="text-2xl font-bold text-[#ff2f00] tracking-tight">LinkRoast</h2>
                     </div>
+                    <p className="text-gray-400 text-xs sm:text-sm font-medium">
+                        A free LinkedIn roast for founders.
+                    </p>
                     <p className="text-gray-500 text-xs sm:text-sm font-medium">
-                        Copyright © 2026 All rev: LinkRoast
+                        Copyright © 2026 LinkRoast. All rights reserved.
                     </p>
                 </div>
 
