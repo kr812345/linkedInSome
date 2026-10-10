@@ -16,6 +16,8 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
   'https://linkroast.vercel.app',
   'https://linkroast.itskrishna.live',
   'https://linked-in-some-cbpa.vercel.app',
